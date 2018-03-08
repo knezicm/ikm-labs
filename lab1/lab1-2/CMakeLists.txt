@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.0)
 project(blinking)
 
 # Create a variable that holds the path to our libwiringPi.so file
-set(WPI_PATH /home/student/wiringPi/wiringPi)
+set(WPI_PATH /home/student/rpi/wiringPi/wiringPi)
 
 # Add the local 'include' directory and the wiringPi directory to grab headers
 include_directories(include ${WPI_PATH})
