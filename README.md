@@ -14,4 +14,12 @@ Za uspješnu i efikasnu realizaciju laboratorijskih vježbi, preporučuje se da 
 * Student može, na lični zahtjev i uz odobrenje predmetnog nastavnika ili asistenta, da pozajmi opremu koja se koristi za realizaciju laboratorijskih vježbi, uz uslov da se pozajmica uredno evidentira i da se do početka sljedeće vježbe (ili, po potrebi, ranije) oprema vrati u laboratoriju.
 
 ## Dostupna oprema
+- PC razvojna platforma sa *Ubuntu 16.04 LTS* virtuelnom mašinom
+- [*Raspberry Pi*](https://www.raspberrypi.org/) ciljna platforma sa preinstaliranim *Raspbian* operativnim sistemom
+- Adapter za napajanje
+- Protobord za realizaciju električnih šema
+- Dodatne elektronske komponente
+- Osciloskop
+
+## Dodatna literatura
 TBA
