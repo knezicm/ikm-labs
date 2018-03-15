@@ -18,7 +18,7 @@ Za uspješnu i efikasnu realizaciju laboratorijskih vježbi, preporučuje se da 
 - [*Raspberry Pi*](https://www.raspberrypi.org/) ciljna platforma sa preinstaliranim *Raspbian* operativnim sistemom
 - Adapter za napajanje
 - Protobord za realizaciju električnih šema
-- Dodatne elektronske komponente
+- Dodatne elektronske komponente i žice za njihovo povezivanje na protobordu
 - Osciloskop
 
 ## Dodatna literatura
