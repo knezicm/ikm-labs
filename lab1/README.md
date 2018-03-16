@@ -21,7 +21,7 @@ Nakon što se student upozna sa strukturom direktorijuma i identifikuje segmente
 
 ```
 cd lab1-1
-cmake . -DCMAKE-TOOLCHAIN-FILE=Toolchain-rpi.cmake
+cmake . -DCMAKE_TOOLCHAIN_FILE=Toolchain-rpi.cmake
 make
 ```
 
