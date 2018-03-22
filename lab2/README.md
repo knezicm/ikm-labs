@@ -1,7 +1,7 @@
 # Laboratorijska vježba 2: Serijski interfejsi bazirani na UART prenosu #
 
 ## Priprema za vježbu ##
-Osnovni cilj vježbe je da se student upozna sa serijskim interejsima koji koriste UART uređaj za prenos podataka. U vježbi se na fizičkom sloju koristi transiver MAX485, koji je neophodan za generisanje diferencijalnih signala na zajedničkoj magistrali u skladu sa RS-485 specifikacijom. S tim u vezi, student treba da bude upoznat sa RS-485 standardom, kao i sa specifikacijom MAX485 komponente, posebno u dijelu koji se odnosi na granične naponske nivoe i strujne kapacitete na njenim pinovima.
+Osnovni cilj vježbe je da se student upozna sa serijskim interejsima koji koriste UART uređaj za prenos podataka. U vježbi se na fizičkom sloju koristi transiver MAX485, koji je neophodan za generisanje diferencijalnih signala na zajedničkoj magistrali u skladu sa RS-485 specifikacijom. S tim u vezi, student treba da bude upoznat sa [RS-485 standardom](http://www.analog.com/media/en/technical-documentation/application-notes/AN-960.pdf), kao i sa specifikacijom [MAX485 komponente](https://datasheets.maximintegrated.com/en/ds/MAX1487-MAX491.pdf), posebno u dijelu koji se odnosi na granične naponske nivoe i strujne kapacitete na njenim pinovima.
 
 Prije početka vježbe, student treba da ažurira stanje lokalnog repozitorijuma izvršavanjem `git pull` komande u okviru `~/ikm-labs/` direktorijuma.
 
