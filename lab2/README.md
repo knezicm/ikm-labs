@@ -32,3 +32,25 @@ sudo raspi-config
 
 Ova komanda prikazuje korisnički interfejs sa ponuđenim različitim opcijama. U ovom slučaju, potrebno je odabrati opciju *Interfacing Options*, a zatim *P6 Serial*. U okviru ponuđenog pitanja, potrebno je odabrati opciju za onemogućenje (*Disable*) konzole na serijskom portu. Konačno, podešavanja treba sačuvati i izaći iz konfiguracionog menija (opcija *Finish*). Pri izlasku, operativni sistem će zahtjevati restartovanje, što treba potvrditi. Nakon restartovanja platforme, na prethodno opisani način, može se potvrditi da sistemska konzola više nije omogućena na hardverskom UART modulu.
 
+Kao što je pomenuto, cilj prvog zadatka je da se student upozna sa osnovama rada sa serijskim portom, kao i da testira ispravnost rada ovog modula. U tom smislu, u okviru zadatka je potrebno pokazati način na koji se mogu provjeriti i izmijeniti podešavanja serijskog porta, kao i inicirati osnovnu komunikaciju preko ovog interfejsa iz *Linux* terminala.
+
+Trenutna podešavanja serijskog porta se mogu provjeriti komandom:
+
+```
+stty -F /dev/ttyAMA0
+```
+
+Takođe, istom komandom se mogu promijeniti trenutna podešavanja. Na primjer, ako želimo da podesimo brzinu na 9600 bps, koristimo sljedeći format komande:
+
+```
+stty -F /dev/ttyAMA0 9600
+```
+
+Konačno, da bi poslali podatke na serijski port, najjednostavnije je koristiti *Linux* operator za redirekciju (`>`).
+
+```
+echo some_string > /dev/ttyAMA0
+```
+U komandi iznad, string `some_string` koji bi trebao da se prikaže na terminalu `echo` komandom, preusmjerava se na serijski port `/dev/ttyAMA0`. Važno je napomenuti da se string specificira unutar dvostrukih navodnika.
+
+Da bi testirali ispravnost rada serijskog porta, potrebno je da se pošalje string koji sadrži nekoliko bajtova čija je vrijednost 0x55, a zatim ovu komunikaciju "uhvatiti" na osciloskopu. Analizom segmenta komunikacije prikazanog na osciloskopu, potrebno je identifikovati *start*, *stop* i bite podataka, a zatim potvrditi da je poslan odgovarajući podatak sa definisanom bitskom brzinom.
