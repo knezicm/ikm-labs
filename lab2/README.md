@@ -12,7 +12,7 @@ git reset --hard
 ```
 
 ## Zadatak 1: Osnovni rad sa serijskim portom ##
-U okviru provig zadatka je potrebno da se student upozna sa osnovama komunikacije putem serijskog porta u okviru *Linux* operativnog sistema. Važno je napomenuti da ćemo u okviru ove vježbe koristiti hardversku UART jedinicu *Raspberry Pi* platforme, čiji su prijemni (RX) i predajni (TX) pinovi dostupni na GPIO konektoru (njihovu poziciju možete pronaći u okviru [Raspberry Pi Pinout](https://pinout.xyz/) servisa).
+U okviru prvog zadatka je potrebno da se student upozna sa osnovama komunikacije putem serijskog porta u okviru *Linux* operativnog sistema. Važno je napomenuti da ćemo u okviru ove vježbe koristiti hardversku UART jedinicu *Raspberry Pi* platforme, čiji su prijemni (RX) i predajni (TX) pinovi dostupni na GPIO konektoru (njihovu poziciju možete pronaći u okviru [Raspberry Pi Pinout](https://pinout.xyz/) servisa).
 
 U okviru operativnog sistema, ovom modulu se može pristupati preko sistemskog fajla `/dev/ttyAMA0`. *Raspbian* operativni sistem podrazumijevano rezerviše ovaj hardverski UART modul za sistemsku konzolu preko koje se može pristupati resursima operativnog sistema u cilju debagovanja sistema. Ovo onemogućava korišćenje serijskog porta za potrebe korisnika. Prema tome, prvo je potrebno provjeriti da li je port već zauzet (odnosno, da li je sistemska konzola omogućena na ovom portu) i, ako jeste, u podešavanjima operativnog sistema onemogućiti je kako bi serijski port bio dostupan.
 
@@ -53,4 +53,11 @@ echo some_string > /dev/ttyAMA0
 ```
 U komandi iznad, string `some_string` koji bi trebao da se prikaže na terminalu `echo` komandom, preusmjerava se na serijski port `/dev/ttyAMA0`. Važno je napomenuti da se string specificira unutar dvostrukih navodnika.
 
-Da bi testirali ispravnost rada serijskog porta, potrebno je da se pošalje string koji sadrži nekoliko bajtova čija je vrijednost 0x55, a zatim ovu komunikaciju "uhvatiti" na osciloskopu. Analizom segmenta komunikacije prikazanog na osciloskopu, potrebno je identifikovati *start*, *stop* i bite podataka, a zatim potvrditi da je poslan odgovarajući podatak sa definisanom bitskom brzinom.
+Da bi testirali ispravnost rada serijskog porta, potrebno je da se pošalje string koji sadrži nekoliko bajtova čija je vrijednost 0x55, a zatim ovu komunikaciju "uhvatiti" na osciloskopu (sondu osciloskopa vezati između TX pina i mase). Analizom segmenta komunikacije prikazanog na osciloskopu, potrebno je identifikovati *start*, *stop* i bite podataka, a zatim potvrditi da je poslan odgovarajući podatak sa definisanom bitskom brzinom.
+
+## Zadatak 2: Pristup serijskom portu korišćenjem *wiringPi* biblioteke ##
+U drugom zadatku, student treba da se upozna sa funkcijama [*wiringPi* biblioteke](http://wiringpi.com/reference/serial-library/) koje omogućavaju pristup UART modulu. U tu svrhu može da se konsultuje i izvorni kod ove biblioteke koji se nalazi u direktorijumu `~/rpi/wiringPi/wiringPi/` na razvojnoj platformi.
+
+Primjer koji pokazuje način korišćenjа funkcija ovebiblioteke se nalazi u direktorijumu `~/ikm-labs/lab2/lab2-2/src/` i predstavlja identičnu kopiju primjera *serialTest* iz *wiringPi* biblioteke (direktorijum `~/rpi/wiringPi/examples/`). Student treba da otvori ovaj primjer u odgovarajućem editoru i da prouči koje funkcije se i na koji način koriste za pristup serijskom portu. Kroskompajlirati primjer i pokrenuti njegovo izvršavanje na ciljnoj platformi. Osciloskopom odrediti bitsku brzinu prenosa. Nakon toga, potrebno je identifikovati dio koda u kojem se podešava brzina prenosa podataka i promijeniti je tako da bude postavljena na 9600 bps. Ponoviti prethodne korake u cilju verifikacije navedenih izmjena na osciloskopu.
+
+
