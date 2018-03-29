@@ -17,9 +17,11 @@ if(NOT WPI_LIB)
 	message(FATAL_ERROR "wiringPi library not found")
 endif()
 
-# Add all the *.c files in our source directory to our executable output
-FILE(GLOB SRC_FILES src/*.c)
-add_executable(rs-485Test ${SRC_FILES})
+# Add master.c to the executable
+add_executable(master src/master.c)
+# Add slave.c to the executable
+add_executable(slave src/slave.c)
 
-# Link the pre-compiled wiringPi library to the executable we just declared
-target_link_libraries(rs-485Test ${WPI_LIB})
+# Link the pre-compiled wiringPi library to the executables we just declared
+target_link_libraries(master ${WPI_LIB})
+target_link_libraries(slave ${WPI_LIB})
