@@ -1,0 +1,22 @@
+diff --git a/slcan_attach.c b/slcan_attach.c
+index 40bddc8..2177662 100644
+--- a/slcan_attach.c
++++ b/slcan_attach.c
+@@ -54,6 +54,8 @@
+ #include <linux/tty.h>
+ #include <linux/sockios.h>
+ 
++#define N_SLLIN 25
++
+ void print_usage(char *prg)
+ {
+ 	fprintf(stderr, "\nUsage: %s [options] tty\n\n", prg);
+@@ -78,7 +80,7 @@ void print_usage(char *prg)
+ int main(int argc, char **argv)
+ {
+ 	int fd;
+-	int ldisc = N_SLCAN;
++	int ldisc = N_SLLIN;
+ 	int detach = 0;
+ 	int waitkey = 0;
+ 	int send_open = 0;
