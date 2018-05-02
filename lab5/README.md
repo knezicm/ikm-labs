@@ -96,20 +96,29 @@ sudo make install
 Kada je *SocketCAN* projekat instaliran, potrebno je testirati funkcionalnost čitavog sistema. Za testiranje, mogu se koristiti alatke `cangen` i `candump`. Više o opcijama koje ove alatke nude, student može da pročita u okviru dokumentacije koja se može naći na web stranici [*Linux-CAN / SocketCAN*](https://github.com/linux-can/can-utils). Pravila po kojima se CAN okviri transliraju u LIN okvire, student može da pronađe u dokumentu *Report describing proposal of LIN to SocketCAN integration* koji se može preuzeti sa web stranice [slLIN - LIN Driver for Standard UART/TTY Interfaces](https://rtime.felk.cvut.cz/can/lin-bus/). Da bi kompletirali zadatak, potrebno je da testirate scenarije opisane i demonstrirane u ovom dokumentu. Rad sistema obavezno verifikovati posmatranjem talasnih oblika na osciloskopu koji je povezan sa UART interfejsom i njihovim poređenjem sa vrijednostima dobijenim u okviru `candump` alata.
 
 ## Zadatak 3: Konfiguracija LIN mreže ##
+U prethodnom zadatku je postignuto da se LIN okviri šalju unosom odgovarajućih komandi i parametara podržanih od strane *SocketCAN* projekta. Međutim, vrlo je važno omogućiti da LIN mreža bude konfigurisana tako da se određeni LIN okviri šalju sa predefinisanim rasporedom, bez intervencije korisnika. Na ovaj način, jednom konfigurisana mreža, može da razmjenjuje informacije posredstvom predefinisanih okvira. Implementacija slLIN omogućava ovakav način rada, tj. čitanje parametara mreže iz konfiguracionog fajla, automatsko učitavanje i pokretanje slLIN modula, te njegovo povezivanje sa UART interfejsom.
 
-# instalacija libxml2-dev paketa
+Prvi korak podrazumijeva instalaciju [PCAN-LIN](https://www.peak-system.com/fileadmin/media/files/pcanlin.zip) softvera za konfiguraciju LIN mreže. Ovaj softver se instalira u okviru *Windows* operativnog sistema i nudi pogodan grafički korisnički interfejs za unos parametara i podešavanje LIN mreže. Uz softver se preuzima i odgovarajuće korisničko uputstvo.
+
+Prije same konfiguracije, na *Raspberry Pi* platformi je potrebno prekompajlirati softver koji se pokreće kao pozadinski proces (*Linux daemon*), a koji omogućava čitanje konfiguracionog fajla LIN mreže i pokretanje ostalih servisa. Da bi to uradili, treba da se premjestimo u direktorijum `~/linux-lin/lin-config/src/`. Prije pokretanja procesa kompajliranja (komanda `make`), potrebno je instalirati biblioteke od kojih ovaj softver zavisi. U tom smislu, treba izvršiti komande
+
+```
 sudo apt-get -y install libxml2-dev
-
-# instalacija libnl-route-3-dev paketa
 sudo apt-get -y install libnl-route-3-dev
+```
 
-# PCAN-LIN konfiguracioni softver
-https://www.peak-system.com/fileadmin/media/files/pcanlin.zip
+**Napomena:** Ako se pojave problemi prilikom preuzimanja i instalacije ovih biblioteka, student treba da ažurira lokalnu bazu softverskih paketa (komanda `sudo apt-get update`).
 
-# ELMOS LIN Frames
+Konačno, potrebno je konfigurisati LIN mrežu tako da se svake sekunde šalju okviri za ELMOS ultrazvučni senzor koji komunicira preko LIN mreže.
 
+ELMOS UZ senzor LIN okviri
+
+```
 # Start Measurement frame
 [0x00] 0x20 0x00 0xc8
 
 # Read Measured Data frame
 [0x03]
+```
+
+Kao osnova za podešavanje mreže u okviru vježbe, može se koristiti konfiguracioni fajl `master_slave.pclin` iz direktorijuma `~/linux-lin/lin-config/examples/`.
