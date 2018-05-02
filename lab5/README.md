@@ -62,23 +62,40 @@ sudo ip link set sllin0 down    # disable interface
 
 Da bi dalje mogli da koristimo ovaj interfejs, potrebno je da se on omogući korišćenjem komande `sudo ip link set sllin0 up`.
 
-## Zadatak 2: Instalacija SocketCAN aplikacija ##
+## Zadatak 2: Instalacija *SocketCAN* aplikacija ##
+U osnovi, slLIN modul predstavlja *Linux* drajver koji omogućava korisničkim aplikacijama u okviru [*Linux-CAN / SocketCAN*](https://github.com/linux-can/can-utils) projekta da šalju i primaju LIN okvire preko UART interfejsa. Suštinski gledano, ovaj modul se ponaša kao CAN-LIN *gateway*, pri čemu se CAN okviri koje generišu *SocketCAN* aplikacije transliraju prema predefinisanim pravilima u LIN okvire i obrnuto, LIN okviri primljeni preko UART interfejsa, prevode se u CAN okvire koji se dalje mogu logovati i interpretirati odgovarajućim *SocketCAN* aplikacijama. Iz navedenog razloga, da bi se omogućila LIN komunikacija, neophodno je da se instaliraju *SocketCAN* aplikacije.
 
+Postoje dva pristupa pri instalaciji. Prvi način podrazumijeva jednostavnu instalaciju binarnog paketa pomoću komande
 
-# instalacija can-utils Linux-CAN / SocketCAN user space applications (https://github.com/linux-can/can-utils)
+```
 sudo apt-get install can-utils
-# instalacija koriscenjem izvornog koda (https://elinux.org/Can-utils)
+```
+
+jer je ovaj projekat dio glavne linije *Linux* kernela.
+
+Međutim, ovaj način ne nudi fleksibilnost u smislu eventualnih modifikacija samog *SocketCAN* softvera. Da bi to bilo moguće, instalaciju treba uraditi ručno, tj. preuzimanjem i kompajliranjem izvornog koda. Ovdje ćemo koristiti drugi način instalacije, jer će biti neophodno napraviti određene modifikacija izvornog koda kako bi se on prilagodio slLIN implementaciji.
+
+Prvo je potrebno preuzeti kompletan projekat sa repozitorijuma korišćenjem komande:
+
+```
 git clone https://github.com/linux-can/can-utils.git
+```
+
+Nakon toga, potrebno je instalirati zakrpu `slcan_attach-sllin-workaround.patch` (iz direktorijuma `./patches`) koja omogućava integraciju *SocketCAN* i slLIN implementacije.
+
+Konačno, projekat se može kompajlirati sljedećom sekvencom komandi:
+
+```
 cd can-utils
 ./autogen.sh
 ./configure
 make
 sudo make install
+```
 
-## Za integraciju sa can-utils koristiti
-slcan_attach-sllin-workaround.patch
+Kada je *SocketCAN* projekat instaliran, potrebno je testirati funkcionalnost čitavog sistema. Za testiranje, mogu se koristiti alatke `cangen` i `candump`. Više o opcijama koje ove alatke nude, student može da pročita u okviru dokumentacije koja se može naći na web stranici [*Linux-CAN / SocketCAN*](https://github.com/linux-can/can-utils). Pravila po kojima se CAN okviri transliraju u LIN okvire, student može da pronađe u dokumentu *Report describing proposal of LIN to SocketCAN integration* koji se može preuzeti sa web stranice [slLIN - LIN Driver for Standard UART/TTY Interfaces](https://rtime.felk.cvut.cz/can/lin-bus/). Da bi kompletirali zadatak, potrebno je da testirate scenarije opisane i demonstrirane u ovom dokumentu. Rad sistema obavezno verifikovati posmatranjem talasnih oblika na osciloskopu koji je povezan sa UART interfejsom i njihovim poređenjem sa vrijednostima dobijenim u okviru `candump` alata.
 
-# potrebno za build lin_config daemon procesa
+## Zadatak 3: Konfiguracija LIN mreže ##
 
 # instalacija libxml2-dev paketa
 sudo apt-get -y install libxml2-dev
