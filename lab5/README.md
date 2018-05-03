@@ -100,7 +100,7 @@ U prethodnom zadatku je postignuto da se LIN okviri šalju unosom odgovarajućih
 
 Prvi korak podrazumijeva instalaciju [PCAN-LIN](https://www.peak-system.com/fileadmin/media/files/pcanlin.zip) softvera za konfiguraciju LIN mreže. Ovaj softver se instalira u okviru *Windows* operativnog sistema i nudi pogodan grafički korisnički interfejs za unos parametara i podešavanje LIN mreže. Uz softver se preuzima i odgovarajuće korisničko uputstvo.
 
-Prije same konfiguracije, na *Raspberry Pi* platformi je potrebno prekompajlirati softver koji se pokreće kao pozadinski proces (*Linux daemon*), a koji omogućava čitanje konfiguracionog fajla LIN mreže i pokretanje ostalih servisa. Da bi to uradili, treba da se premjestimo u direktorijum `~/linux-lin/lin-config/src/`. Prije pokretanja procesa kompajliranja (komanda `make`), potrebno je instalirati biblioteke od kojih ovaj softver zavisi. U tom smislu, treba izvršiti komande
+Prije same konfiguracije, na *Raspberry Pi* platformi je potrebno prekompajlirati softver koji se pokreće kao pozadinski proces (*Linux daemon*), a koji omogućava čitanje konfiguracionog fajla LIN mreže i pokretanje ostalih servisa. Da bi to uradili, treba da se premjestimo u direktorijum `lin-config/src/` *Linux-LIN* projekta. Prije pokretanja procesa kompajliranja (komanda `make`), potrebno je instalirati biblioteke od kojih ovaj softver zavisi. U tom smislu, treba izvršiti komande
 
 ```
 sudo apt-get -y install libxml2-dev
@@ -109,9 +109,7 @@ sudo apt-get -y install libnl-route-3-dev
 
 **Napomena:** Ako se pojave problemi prilikom preuzimanja i instalacije ovih biblioteka, student treba da ažurira lokalnu bazu softverskih paketa (komanda `sudo apt-get update`).
 
-Konačno, potrebno je konfigurisati LIN mrežu tako da se svake sekunde šalju okviri za ELMOS ultrazvučni senzor koji komunicira preko LIN mreže.
-
-ELMOS UZ senzor LIN okviri
+Konačno, potrebno je konfigurisati LIN mrežu tako da se svake sekunde šalju okviri za ELMOS ultrazvučni senzor koji komunicira preko LIN mreže. ELMOS ultrazvučni senzor koristi LIN okvire čija je struktura data ispod kako bi inicirao mjerenje (okvir *Start Measurement* za emitovanje ultrazvučnog talasa sa predefinisanim parametrima) i pročitao izmjerenu vrijednost vremena potrebnog za refleksiju talasa od objekta čija udaljenost od senzora se mjeri (okvir *Read Measurement Data*).
 
 ```
 # Start Measurement frame
@@ -121,4 +119,26 @@ ELMOS UZ senzor LIN okviri
 [0x03]
 ```
 
-Kao osnova za podešavanje mreže u okviru vježbe, može se koristiti konfiguracioni fajl `master_slave.pclin` iz direktorijuma `~/linux-lin/lin-config/examples/`.
+Heksadecimalna vrijednost u uglatim zagradama predstavlja LIN-ID, dok ostale vrijednosti (ukoliko postoje) predstavljaju podatke koji su sastavni dio *Response* dijela LIN okvira (koji šalje *Slave* proces unutar *Master* uređaja).
+
+Kao polaznu osnovu za podešavanje mreže u okviru vježbe, preporučuje se da student koristi konfiguracioni fajl `master_slave.pclin` iz direktorijuma `lin-config/examples/` *Linux-LIN* projekta. U konkretnom slučaju, potrebno je modifikovati sljedeće parametre LIN mreže u skladu sa prethodno opisanim zahtjevima i strukturom LIN okvira za aktivaciju ELMOS ultrazvučnog senzora:
+1. *Bit rate* (postaviti na 9600)
+2. *Scheduler Entries* (postaviti u skladu sa prethodno opisanim vremenskim rasporedom)
+3. *Frame Configuration* (podesiti u skladu sa prethodno opisanom strukturom LIN okvira)
+
+Nakon što su parametri LIN mreže podešeni na željene vrijednosti, konfiguracioni fajl treba sačuvati (npr. sa nazivom `elmos-master.pclin`), a zatim ovaj fajl premjestiti u direktorijum gdje se nalazi prekompajlirana `lin_config` alatka. Student treba da se upozna sa opcijama koje nudi ova alatka korišćenjem dostupne dokumentacije ili direktno, unošenjem komande `./lin_config -h` u terminalu *Raspberry Pi* platforme. U suštini, za čitanje konfiguracionog fajla LIN mreže i pokretanje odgovarajućih servisa, potrebno je koristiti sljedeće komande:
+
+```
+# Kill all running instances of lin_config
+killall lin_config
+# Disable slLIN interface
+ip link set sllin0 down
+# Run configuration instance with the required parameters
+./lin_config sllin:/dev/ttyAMA0 -c ../examples/elmos-master.pclin -a
+# Enable slLIN interface
+ip link set sllin0 up
+```
+
+**Napomena:** Parametri komande `lin_config` se mogu razlikovati u zavisnosti od toga gdje je sačuvan konfiguracioni fajl. Preporučuje se studentu da se upozna sa svim opcijama komande iz priložene dokumentacije.
+
+Konačno, potrebno je povezati LIN transiver sa *Raspberry Pi* platformom i sa senzorom preko LIN linije. Pri tome treba voditi računa o naponskim nivoima i izvoru za napajanje koje se koristi za napajanje LIN mreže.
