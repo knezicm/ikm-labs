@@ -14,7 +14,7 @@ make
 sudo make install
 ```
 
-## Zadatak 1: Instalacija i testiranje CAN drajvera##
+## Zadatak 1: Instalacija i testiranje CAN drajvera ##
 Da bi mogao da se koristi CAN interefejs na *Raspberry Pi* platformi, neophodno je obezbijediti odgovarajući hardverski modul koji je povezan na jedan od interfejsa koje ova platforma nudi. U našem slučaju, koristićemo modul *CAN SPI click* proizvođača Mikroelektronika. Ovaj modul sadrži CAN kontroler MCP2515 i CAN transiver MCP2551, koji omogućavaju povezivanje mikrokontrolera (ili mikroprocesora) sa CAN mrežom preko interfejsa. Srećom, za MCP2515 CAN kontroler već postoji podrška u *Linux* operativnom sistemu u vidu drajverskog modula. Da bi se ovaj modul učitao prilikom podizanja sistema na *Raspberry Pi* platformi, potrebno je promijeniti strukturu hardversa sistema u okviru definisanjem odgovarajućih parametara u okviru `/boot/config/txt` fajla. U tom smislu, ovaj fajl treba editovati komandom
 
 ```
