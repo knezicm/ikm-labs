@@ -83,3 +83,6 @@ candump can0
 Da bi se kompletirala vježba, student treba da provjeri koje poruke dobija od drugog uređaja (ispitivanjem sadržaja u okviru prozora sa `candump` alatkom), odnosno da utvrdi koliko okvira se periodično dobija sa interfejsa, koji su CAN identifikatori ovih okvira i šta je sadržaj (podaci) ovih okvira. O kakvom se tekstu radi ako se dobijeni bajtovi podataka interpretiraju kao ASCII podaci. Takođe, posmatranjem okvira na osiloskopu utvrditi da li i gdje se nalaze umetnuti biti.
 
 Izmijeniti primjer komande `cansend` tako da se omogući slanje dva okvira: prvi sa identifikatorom 0x34 i poljem podataka koje sadrži tekst `hello` i drugi sa identifikatorom 0x123456 i poljem podataka koje sadrži tekst `world`.
+
+## Zadatak 2: Rad sa *SocketCAN* interfejsom ##
+U drugom zadatku, student treba da se upozna sa interfejsom koji obezbjeđuje *SocketCAN*. Iako je ovaj interfejs kompatibilan sa konceptom *Berkley Socket* interfejsa, zbog specifičnosti CAN adresiranja, preporučuje se da student pri izradi zadatka redovno konsultuje zvaničnu [*SocketCAN* dokumentaciju](https://www.kernel.org/doc/Documentation/networking/can.txt).
