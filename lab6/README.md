@@ -86,3 +86,7 @@ Izmijeniti primjer komande `cansend` tako da se omogući slanje dva okvira: prvi
 
 ## Zadatak 2: Rad sa *SocketCAN* interfejsom ##
 U drugom zadatku, student treba da se upozna sa interfejsom koji obezbjeđuje *SocketCAN*. Iako je ovaj interfejs kompatibilan sa konceptom *Berkley Socket* interfejsa, zbog specifičnosti CAN adresiranja, preporučuje se da student pri izradi zadatka redovno konsultuje zvaničnu [*SocketCAN* dokumentaciju](https://www.kernel.org/doc/Documentation/networking/can.txt).
+
+Cilj zadatka je da se implementiraju programi *CANsender* i *CANreceiver*. Program *CANsender* treba da implementira funkcionalnost predajnog CAN uređaja iz prethodnog zadatka. Funkcionalnost se može identifikovati na osnovu analize saobraćaja dobijenog u okviru `candump` alata. Kao polazna tačka za implementaciju programa, može se iskoristiti izvorni kod iz fajla `cansend.c`, koji je sastavni dio *Linux-CAN / SocketCAN* projekta.
+
+Program *CANreceiver* treba da realizuje funkcionalnost prijemnog uređaja (kao ekvivalent `candump` alatu). U tom smislu, potrebno je implementirati prijemnik koji sadrži CAN filter za identifikatore okvira koje šalje predajni uređaj i da na terminalu prikazuje saobraćaj ograničen na *CANsender* uređaj. Kao polazna tačka za implementaciju programa, može se iskoristiti izvorni kod iz fajla `candump.c`, koji je sastavni dio *Linux-CAN / SocketCAN* projekta.
