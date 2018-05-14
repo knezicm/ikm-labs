@@ -1,4 +1,4 @@
-# Laboratorijska vježba 6: Protokoli CAN i CANopen #
+# Laboratorijska vježba 6: CAN protokol #
 
 ## Priprema za vježbu ##
 Prije realizacije vježbe je prvo potrebno potvrditi da je instaliran softverski paket *Linux-CAN / SocketCAN*. Ako je prethodno primijenjen *patch* neophodan za rad sa slLIN modulom, vratiti stanje repozitorijuma na inicijalno stanje komandom:
@@ -38,6 +38,8 @@ dtoverlay=spi-bcm2835-overlay
 
 za starije verzije *Linux* kernela.
 
+**Napomena:** Informaciju o trenutnoj verziji *Linux* kernela možete dobiti komandom `uname -r`.
+
 Kada su napravljene opisane izmjene, platformu treba restartovati i provjeriti da li je MCP2515 CAN kontroler uspješno inicijalizovan. U tu svrhu, može se koristiti komanda
 
 ```
@@ -47,9 +49,9 @@ dmesg | grep can
 
 pri čemu je u drugoj liniji prikazan tipičan ispis nakon izvršavanja komande (kada je incijalizacija uspješna). Ako se prijavi neka greška, potrebno je provjeriti da li je *CAN SPI click* modul povezan sa SPI interfejsom kako treba.
 
-**Napomena:** Prethodne komande podešavaju komunikaciju sa CAN kontrolerom preko SPI0 kanala platforme, pri čemu se koristi kao SS signal koristi CE0 pin, dok je ulaz za prekid povezan na pin BCM 25 platforme (što je definisano parametrom `interrupt`).
+**Napomena:** Prethodne komande podešavaju komunikaciju sa CAN kontrolerom preko SPI0 kanala platforme, pri čemu se kao SS signal koristi CE0 pin, dok je ulaz za prekid povezan na pin BCM 25 platforme (definisano parametrom `interrupt`).
 
-Nakon što je potvrđeno prethodnom provjerom da je CAN kontroler uspješno inicijalizovan, sljedeći korak podrazumijeva aktiviranje CAN interefejsa. Ovo se postiže istim komandama kao kada se radi sa klasičnim mrežnim interfejsima.
+Nakon što je prethodnom provjerom potvrđeno da je CAN kontroler uspješno inicijalizovan, sljedeći korak podrazumijeva aktiviranje CAN interefejsa. Ovo se postiže istim komandama kao kada se radi sa klasičnim mrežnim interfejsima.
 
 ```
 sudo ip link set can0 up type can bitrate 125000	# enable interface
@@ -80,4 +82,4 @@ candump can0
 
 Da bi se kompletirala vježba, student treba da provjeri koje poruke dobija od drugog uređaja (ispitivanjem sadržaja u okviru prozora sa `candump` alatkom), odnosno da utvrdi koliko okvira se periodično dobija sa interfejsa, koji su CAN identifikatori ovih okvira i šta je sadržaj (podaci) ovih okvira. O kakvom se tekstu radi ako se dobijeni bajtovi podataka interpretiraju kao ASCII podaci. Takođe, posmatranjem okvira na osiloskopu utvrditi da li i gdje se nalaze umetnuti biti.
 
-Izmijeniti primjer komande `cansend` tako da se omogući slanje dva okvira: prvi sa identifikatorom 0x127 i poljem podataka koje sadrži tekst `hello` i drugi sa identifikatorom 0x128 i poljem podataka koje sadrži tekst `world`.
+Izmijeniti primjer komande `cansend` tako da se omogući slanje dva okvira: prvi sa identifikatorom 0x34 i poljem podataka koje sadrži tekst `hello` i drugi sa identifikatorom 0x123456 i poljem podataka koje sadrži tekst `world`.
