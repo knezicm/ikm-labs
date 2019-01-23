@@ -59,9 +59,12 @@ Dobijene alate ćemo koristiti da napravimo vlastite RaspberryPi aplikacije. Ova
 
 Koristićemo standardnu pthreads biblioteku (koja se nalazi u preuzetom toolchain-u), lokalno-kompajliranu open-source wiringPi biblioteku i trenutni C11 standard sa našim kompajlerom.
 
-Preostalo je da povučemo i *wiringPi* biblioteku:
+Preostalo je da povučemo i instaliramo *wiringPi* biblioteku:
   ```
   git clone git://git.drogon.net/wiringPi
+  cd wiringPi
+  git pull origin
+  sudo ./build
   ```
   
 - CMake 
