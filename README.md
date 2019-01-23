@@ -45,7 +45,7 @@ Koristićemo biblioteku *wiringPi* kao primjer.
   ```
   git pull https://github.com/raspberrypi/tools
   ```
-  Napomena: da bi mogli povući RaspberryPi toolchain, neophodno je instalirati *git* komandom:
+  Napomena: da bi mogli povući RaspberryPi toolchain, neophodno je instalirati *git*, i to komandom:
    ```
      sudo apt-get install git
    ```
