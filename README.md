@@ -29,11 +29,11 @@ Kros-kompajler je kompajler koji kreira izvršni kod za platformu koja nije ona 
 
 Koristićemo kros-kompajler da napravimo softver za Raspberry Pi na našem, glavnom računaru, koristeći svu njegovu snagu i njegove prednosti.
 
-Koristićemo biblioteku wiringPi kao primjer. 
+Koristićemo biblioteku *wiringPi* kao primjer. 
 
 *Dodavanje alatki kros-kompajlera i platforme na naš računar*
 
--	Kreirati direktorijum unutar Home direktorijuma na virtuelnoj mašini, pod nazivom student (u njega ćemo smještati sve):
+-	Kreirati direktorijum unutar Home direktorijuma na virtuelnoj mašini, pod nazivom *student* (u njega ćemo smještati sve):
    ```
    mkdir student
    ```
@@ -50,7 +50,7 @@ Dobijene alate ćemo koristiti da napravimo vlastite RaspberryPi aplikacije. Ova
 
 Koristićemo standardnu pthreads biblioteku (koja se nalazi u preuzetom toolchain-u), lokalno-kompajliranu open-source wiringPi biblioteku i trenutni C11 standard sa našim kompajlerom.
 
-Preostalo je da povučemo i wiringPi biblioteku sa http://wiringpi.com/download-and-install/:
+Preostalo je da povučemo i *wiringPi* biblioteku sa http://wiringpi.com/download-and-install/:
   ```
   git pull http://wiringpi.com/download-and-install/
   ```
