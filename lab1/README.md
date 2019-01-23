@@ -43,13 +43,27 @@ U konkretnom slučaju, s obzirom da je podrazumijevano korisničko ime *pi* i da
 scp /home/student/ikm-labs/lab1/lab1-1/hello-world pi@192.168.23.205:/home/pi/student-name/lab1
 ```
 
-**Napomena:** Prije pokretanja prethodne komande, student treba da napravi direktorijum (korišćenjem `mkdir` komande) sa svojim imenom (npr. `milan-milanovic`) i prezimenom na ciljnoj platformi u okviru `/home/pi` direktorijuma. Takođe, u okviru ovog direktorijuma, treba da se nalazi direktorijum `lab1`.
-
-Kada je izvršni fajl prenesen na ciljnu platformu, može se pokrenuti njegovo izvršavanje. Da bi mu pristupili, potrebno je da se daljinski povežemo sa ciljnom platformom. Ovo se može postići sa razvojne platforme pomoću `ssh` programa. Sintaksa ove komande je slična sintaksi `scp` programa, tj. potrebno je definisati korisničko ime i IP adresu ciljne platforme. Razlika je u tome što se ne specificiraju nazivi fajlova, jer se ne obavlja nikakvo kopiranje. U konkretnom slučaju, za izvršavanje programa, potrebno je pokrenuti sljedeću sekvencu komandi:
+**Napomena:** Prije pokretanja prethodne komande, student treba da napravi direktorijum (korišćenjem `mkdir` komande) sa svojim imenom (npr. `milan-milanovic`) i prezimenom na ciljnoj platformi u okviru `/home/pi` direktorijuma. Takođe, u okviru ovog direktorijuma, treba da se nalazi direktorijum `lab1`. Da bi ovo mogli uraditi na ciljnoj platformi, potrebno je da se daljinski povežemo sa ciljnom platformom. Ovo se može postići sa razvojne platforme pomoću `ssh` programa. Sintaksa ove komande je slična sintaksi `scp` programa, tj. potrebno je definisati korisničko ime i IP adresu ciljne platforme. Razlika je u tome što se ne specificiraju nazivi fajlova, jer se ne obavlja nikakvo kopiranje. Potrebno je unijeti sljedeću sekvencu komandi:
 
 ```
 ssh pi@192.168.23.205
 /// unijeti korisničku šifru ///
+mkdir student-name
+cd student-name
+mkdir lab1
+```
+hello-world
+Da bi prekinuli vezu sa ciljnom platformom i pokrenuli prethodno navedenu komandu `scp`, dovoljno je unijeti komandu:
+
+```
+exit
+```
+
+Kada je izvršni fajl prenesen na ciljnu platformu, može se pokrenuti njegovo izvršavanje. Potrebno je ponovo se poveyati na ciljnu platformu i unijeti sljedeću sekvencu komandi
+
+```
+ssh pi@192.168.23.205
+/// unijeti korisničku šifru /////
 cd ./student-name/lab1
 ./hello-world
 ```
