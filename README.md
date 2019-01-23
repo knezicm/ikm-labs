@@ -45,6 +45,12 @@ Koristićemo biblioteku *wiringPi* kao primjer.
   ```
   git pull https://github.com/raspberrypi/tools
   ```
+  Napomena: da bi mogli povući RaspberryPi toolchain, neophodno je instalirati *git* komandom:
+   ```
+     sudo apt-get install git
+   ```
+      
+  
   
 Dobijene alate ćemo koristiti da napravimo vlastite RaspberryPi aplikacije. Ovaj direktorijum (raspberrypi/tools) sadrži alatke za build-ovanje, standardne biblioteke i sistemske pozive koji će trebati našoj aplikaciji.
 
