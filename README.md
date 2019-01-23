@@ -41,24 +41,27 @@ Koristićemo biblioteku *wiringPi* kao primjer.
   ```
   cd student \
   ```
--	Povući RaspberryPi toolchain sa: https://github.com/raspberrypi/tools
+-	Povući RaspberryPi toolchain sa: https://github.com/raspberrypi/tools ()
   ```
-  git pull https://github.com/raspberrypi/tools
+  git pull https://github.com/raspberrypi/tools 
   ```
   Napomena: da bi mogli povući RaspberryPi toolchain, neophodno je instalirati *git*, i to komandom:
    ```
      sudo apt-get install git
    ```
-      
+   a zatim i kreirati git repoziturijum:
+   ```
+   git init
+   ```
   
   
 Dobijene alate ćemo koristiti da napravimo vlastite RaspberryPi aplikacije. Ovaj direktorijum (raspberrypi/tools) sadrži alatke za build-ovanje, standardne biblioteke i sistemske pozive koji će trebati našoj aplikaciji.
 
 Koristićemo standardnu pthreads biblioteku (koja se nalazi u preuzetom toolchain-u), lokalno-kompajliranu open-source wiringPi biblioteku i trenutni C11 standard sa našim kompajlerom.
 
-Preostalo je da povučemo i *wiringPi* biblioteku sa http://wiringpi.com/download-and-install/:
+Preostalo je da povučemo i *wiringPi* biblioteku:
   ```
-  git pull http://wiringpi.com/download-and-install/
+  git clone git://git.drogon.net/wiringPi
   ```
   
 - CMake 
