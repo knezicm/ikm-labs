@@ -21,5 +21,38 @@ Za uspješnu i efikasnu realizaciju laboratorijskih vježbi, preporučuje se da 
 - Dodatne elektronske komponente i žice za njihovo povezivanje na protobordu
 - Osciloskop
 
+## Priprema za realizaciju operativnog sistema
+
+- Priprema kros-kompajlera na *Raspbian* operativnom sistemu
+
+Kros-kompajler je kompajler koji kreira izvršni kod za platformu koja nije ona na kojoj se izvršava kompajler (npr. kompajler koji radi na Win 7 PC-u, ali generiše kod koji radi na Android smartphone-u). Kros-kompajler je neophodan za kompajliranje koda za više platformi uz jednog razvojnog hosta. Direktno kompajliranje na ciljnoj platformi može biti neizvodivo, npr. na mikrokontroleru ugrađenog sistema, jer ti sistemi ne sadrže operativni sistem.
+
+Koristićemo kros-kompajler da napravimo softver za Raspberry Pi na našem, glavnom računaru, koristeći svu njegovu snagu i njegove prednosti.
+
+Koristićemo biblioteku wiringPi kao primjer. 
+
+- Dodavanje alatki kros-kompajlera i platforme na naš računar
+
+1.	Kreirati direktorijum unutar Home direktorijuma na virtuelnoj mašini, pod nazivom student (u njega ćemo smještati sve):
+mkdir student
+2.	Pristupiti praznom direktorijumu student:
+cd student \
+3.	Povući RaspberryPi toolchain sa: https://github.com/raspberrypi/tools
+git pull https://github.com/raspberrypi/tools
+
+Dobijene alate ćemo koristiti da napravimo vlastite RaspberryPi aplikacije. Ovaj direktorijum (raspberrypi/tools) sadrži alatke za build-ovanje, standardne biblioteke i sistemske pozive koji će trebati našoj aplikaciji.
+
+Koristićemo standardnu pthreads biblioteku (koja se nalazi u preuzetom toolchain-u), lokalno-kompajliranu open-source wiringPi biblioteku i trenutni C11 standard sa našim kompajlerom.
+
+Preostalo je da povučemo i wiringPi biblioteku sa http://wiringpi.com/download-and-install/:
+
+git pull http://wiringpi.com/download-and-install/
+
+- CMake 
+
+Cmake se koristi za kreiranje makefile-ova za projekat. Cmake ćemo morati da pokrenemo bar dva puta: jednom za našu glavnu aplikaciju, i jednom za našu prilagođenu biblioteku. Svaki od ova dva slučaja će morati da ima sopstveni tekstualni fajl “CmakeLists.txt” u kom je specificirano kako će se kompajlirati izvorni fajl, koji je toolchain fajl itd.
+Napomena: Ovi fajlovi su dostupni na repozitorujumu za svaku laboratorijsku vježbu.
+
+
 ## Dodatna literatura
 TBA
