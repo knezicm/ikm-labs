@@ -24,6 +24,10 @@ cd lab1-1
 cmake . -DCMAKE_TOOLCHAIN_FILE=Toolchain-rpi.cmake
 make
 ```
+Ukoliko cmake komanda nije pronađena, potrebno je prethodno instalirati komandom:
+```
+sudo apt install cmake
+```
 
 Ukoliko se prilikom procesa prevođenja ne pojave nikakve greške i upozorenja, kao rezultat bi trebalo da se trenutnom direktorijumu pojavi izvršni fajl pod nazivom `hello-world`. Ako pokušate da pokrenete izvršavanje ovog fajla na razvojnoj platformi, trebalo bi da dobijete informaciju o greški, jer fajl nije kompatibilan za izvršavanje na trenutnoj platformi.
 
