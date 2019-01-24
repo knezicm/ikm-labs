@@ -27,7 +27,7 @@ Za uspješnu i efikasnu realizaciju laboratorijskih vježbi, preporučuje se da 
 
 Kros-kompajler je kompajler koji kreira izvršni kod za platformu koja nije ona na kojoj se izvršava kompajler (npr. kompajler koji radi na Win 7 PC-u, ali generiše kod koji radi na Android smartphone-u). Kros-kompajler je neophodan za kompajliranje koda za više platformi uz jednog razvojnog hosta. Direktno kompajliranje na ciljnoj platformi može biti neizvodivo, npr. na mikrokontroleru ugrađenog sistema, jer ti sistemi ne sadrže operativni sistem.
 
-Koristićemo kros-kompajler da napravimo softver za Raspberry Pi na našem, glavnom računaru, koristeći svu njegovu snagu i njegove prednosti.
+Koristićemo kros-kompajler da napravimo softver za *RaspberryPi* na našem, glavnom računaru, koristeći svu njegovu snagu i njegove prednosti.
 
 Koristićemo biblioteku *wiringPi* kao primjer. 
 
@@ -41,23 +41,23 @@ Koristićemo biblioteku *wiringPi* kao primjer.
   ```
   cd student \
   ```
--	Povući RaspberryPi toolchain sa: https://github.com/raspberrypi/tools ()
+-	Povući *RaspberryPi toolchain* sa: https://github.com/raspberrypi/tools ()
   ```
   git pull https://github.com/raspberrypi/tools 
   ```
-  Napomena: da bi mogli povući RaspberryPi toolchain, neophodno je instalirati *git*, i to komandom:
+  Napomena: da bi mogli povući *RaspberryPi toolchain*, neophodno je instalirati *git*, i to komandom:
    ```
      sudo apt-get install git
    ```
-   a zatim i kreirati git repoziturijum:
+   a zatim i kreirati *git repoziturijum*:
    ```
    git init
    ```
   
   
-Dobijene alate ćemo koristiti da napravimo vlastite RaspberryPi aplikacije. Ovaj direktorijum (raspberrypi/tools) sadrži alatke za build-ovanje, standardne biblioteke i sistemske pozive koji će trebati našoj aplikaciji.
+Dobijene alate ćemo koristiti da napravimo vlastite *RaspberryPi* aplikacije. Ovaj direktorijum (raspberrypi/tools) sadrži alatke za build-ovanje, standardne biblioteke i sistemske pozive koji će trebati našoj aplikaciji.
 
-Koristićemo standardnu pthreads biblioteku (koja se nalazi u preuzetom toolchain-u), lokalno-kompajliranu open-source wiringPi biblioteku i trenutni C11 standard sa našim kompajlerom.
+Koristićemo standardnu pthreads biblioteku (koja se nalazi u preuzetom toolchain-u), lokalno-kompajliranu open-source *wiringPi* biblioteku i trenutni C11 standard sa našim kompajlerom.
 
 Preostalo je da povučemo i instaliramo *wiringPi* biblioteku:
   ```
