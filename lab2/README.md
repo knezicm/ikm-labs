@@ -30,7 +30,7 @@ Ova komandnda prikazuje sve terminalne uređaje (uključujući i hardverski UART
 sudo raspi-config
 ```
 
-Ova komanda prikazuje korisnički interfejs sa ponuđenim različitim opcijama. U ovom slučaju, potrebno je odabrati opciju *Interfacing Options*, a zatim *P6 Serial*. U okviru ponuđenog pitanja, potrebno je odabrati opciju za onemogućenje (*Disable*) konzole na serijskom portu. Konačno, podešavanja treba sačuvati i izaći iz konfiguracionog menija (opcija *Finish*). Pri izlasku, operativni sistem će zahtjevati restartovanje, što treba potvrditi. Nakon restartovanja platforme, na prethodno opisani način, može se potvrditi da sistemska konzola više nije omogućena na hardverskom UART modulu.
+Ova komanda prikazuje korisnički interfejs sa ponuđenim različitim opcijama. U ovom slučaju, potrebno je odabrati opciju *Interfacing Options*, a zatim *P6 Serial*. U okviru ponuđenih pitanja, potrebno je odabrati opciju za onemogućenje (*Disable*) konzole na serijskom portu. Konačno, podešavanja treba sačuvati i izaći iz konfiguracionog menija (opcija *Finish*). Pri izlasku, operativni sistem će zahtjevati restartovanje, što treba potvrditi. Nakon restartovanja platforme, na prethodno opisani način, može se potvrditi da sistemska konzola više nije omogućena na hardverskom UART modulu.
 
 Kao što je pomenuto, cilj prvog zadatka je da se student upozna sa osnovama rada sa serijskim portom, kao i da testira ispravnost rada ovog modula. U tom smislu, u okviru zadatka je potrebno pokazati način na koji se mogu provjeriti i izmijeniti podešavanja serijskog porta, kao i inicirati osnovnu komunikaciju preko ovog interfejsa iz *Linux* terminala.
 
