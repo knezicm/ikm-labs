@@ -66,7 +66,57 @@ Preostalo je da povučemo i instaliramo *wiringPi* biblioteku:
   git pull origin
   sudo ./build
   ```
-  
+
+Nakon komande *build*, potrebno je kompajlirati ovu biblioteku a za to je potrebno da napravimo fajlove *"CMakeLists.txt"* i *"Toolchain-rpi.cmake"* unutar direktorijuma u kom nam se nalazi biblioteka /wiringPi/wiringPi. Fajlovi treba da budu sledećeg sadržaja:
+
+CMakeLists.txt:
+
+```
+cmake_minimum_required(VERSION 3.0)
+# Have CMake find our pthreads library within our toolchain (required for this library)
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+find_package(Threads REQUIRED)
+# add all the *.c files as sources
+FILE(GLOB SRC_FILES *.c)
+# make this output a shared library (with .so output)
+add_library (wiringPi SHARED ${SRC_FILES})
+# be sure to include the current source directory for header files
+target_include_directories (wiringPi PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+# add the following required libraries:
+# Threads, Math, Crypt, and RealTime
+target_link_libraries(wiringPi ${CMAKE_THREAD_LIBS_INIT} crypt m rt)
+```
+
+Toolchain-rpi.cmake:
+
+```
+# Define our host system
+SET(CMAKE_SYSTEM_NAME Linux)
+SET(CMAKE_SYSTEM_VERSION 1)
+# Define the cross compiler locations
+SET(CMAKE_C_COMPILER   /home/pi/student/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
+SET(CMAKE_CXX_COMPILER /home/pi/student/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
+# Define the sysroot path for the RaspberryPi distribution in our tools folder 
+SET(CMAKE_FIND_ROOT_PATH /home/pi/student/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/arm-linux-gnueabihf/sysroot/)
+# Use our definitions for compiler tools
+SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+# Search for libraries and headers in the target directories only
+SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+add_definitions(-Wall -std=c11)
+```
+
+*Napomena*: Unutar "Toolchain-rpi.cmake" fajla, obratiti pažnju na definisanu putanju kompajlera, to mora biti putanja na kojoj se trenutno nalazi kompajler koji smo povukli zajedno sa *RaspberryPi toolchain*-on.
+
+Nakon kreiranja ovih fajlova, potrebno je još samo pokrenuti komande:
+
+```
+cmake . -DCMAKE_TOOLCHAIN_FILE=Toolchain-rpi.cmake
+make
+```
+
+Biblioteka *wiringPi* je sada spremna za korištenje.
+
 - CMake 
 
 Cmake se koristi za kreiranje makefile-ova za projekat. Cmake ćemo morati da pokrenemo bar dva puta: jednom za našu glavnu aplikaciju, i jednom za našu prilagođenu biblioteku. Svaki od ova dva slučaja će morati da ima sopstveni tekstualni fajl “*CmakeLists.txt*” u kom je specificirano kako će se kompajlirati izvorni fajl, koji je toolchain fajl itd.
