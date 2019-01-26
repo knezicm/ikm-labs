@@ -21,7 +21,7 @@ Za uspješnu i efikasnu realizaciju laboratorijskih vježbi, preporučuje se da 
 - Dodatne elektronske komponente i žice za njihovo povezivanje na protobordu
 - Osciloskop
 
-## Priprema za realizaciju operativnog sistema
+## Priprema za realizaciju laboratorijskih vježbi
 
 *Priprema kros-kompajlera na Raspbian operativnom sistemu*
 
