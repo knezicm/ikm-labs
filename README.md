@@ -45,7 +45,7 @@ Koristićemo biblioteku *wiringPi* kao primjer.
   ```
   git pull https://github.com/raspberrypi/tools 
   ```
-  Napomena: da bi mogli povući *RaspberryPi toolchain*, neophodno je instalirati *git*, i to komandom:
+ **Napomena:** da bi mogli povući *RaspberryPi toolchain*, neophodno je instalirati *git*, i to komandom:
    ```
      sudo apt-get install git
    ```
@@ -106,7 +106,7 @@ SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 add_definitions(-Wall -std=c11)
 ```
 
-*Napomena*: Unutar "Toolchain-rpi.cmake" fajla, obratiti pažnju na definisanu putanju kompajlera, to mora biti putanja na kojoj se trenutno nalazi kompajler koji smo povukli zajedno sa *RaspberryPi toolchain*-on.
+**Napomena:** Unutar "Toolchain-rpi.cmake" fajla, obratiti pažnju na definisanu putanju kompajlera, to mora biti putanja na kojoj se trenutno nalazi kompajler koji smo povukli zajedno sa *RaspberryPi toolchain*-on.
 
 Nakon kreiranja ovih fajlova, potrebno je još samo pokrenuti komande:
 
