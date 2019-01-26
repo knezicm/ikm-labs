@@ -53,6 +53,18 @@ echo some_string > /dev/ttyAMA0
 ```
 U komandi iznad, string `some_string` koji bi trebao da se prikaže na terminalu `echo` komandom, preusmjerava se na serijski port `/dev/ttyAMA0`. Važno je napomenuti da se string specificira unutar dvostrukih navodnika.
 
+**Napomena:** Ukoliko je korištena ciljna platforma Raspberry Pi 3 Model B, prije slanja podatka na serijski port neophodno je onemogućiti *bluetooth*, i to tako što ćemo izmjeniti *"config.txt"*:
+
+```
+sudo nano /boot/config.txt
+```
+Unutar ove datoteke je potrebno dodati sljedeću liniju tekst i sačuvati datoteku:
+
+```
+dtoverlay=pi3-disable-bt
+```
+
+
 Da bi testirali ispravnost rada serijskog porta, potrebno je da se pošalje string koji sadrži nekoliko bajtova čija je vrijednost 0x55, a zatim ovu komunikaciju "uhvatiti" na osciloskopu (sondu osciloskopa vezati između TX pina i mase). Analizom segmenta komunikacije prikazanog na osciloskopu, potrebno je identifikovati *start*, *stop* i bite podataka, a zatim potvrditi da je poslan odgovarajući podatak sa definisanom bitskom brzinom.
 
 ## Zadatak 2: Pristup serijskom portu korišćenjem *wiringPi* biblioteke ##
