@@ -59,7 +59,7 @@ Da bi prekinuli vezu sa ciljnom platformom i pokrenuli prethodno navedenu komand
 exit
 ```
 
-Kada je izvršni fajl prenesen na ciljnu platformu, može se pokrenuti njegovo izvršavanje. Potrebno je ponovo se poveyati na ciljnu platformu i unijeti sljedeću sekvencu komandi
+Kada je izvršni fajl prenesen na ciljnu platformu, može se pokrenuti njegovo izvršavanje. Potrebno je ponovo se povezati na ciljnu platformu i unijeti sljedeću sekvencu komandi:
 
 ```
 ssh pi@192.168.23.205
