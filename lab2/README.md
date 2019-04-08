@@ -1,4 +1,4 @@
-# Laboratorijska vježba 2: Serijski interfejsi bazirani na UART interfejsu #
+# Laboratorijska vježba 2: UART interfejs #
 
 ## Ciljevi i ishodi ##
 Osnovni cilj vježbe je da se student upozna sa osnovnim parametrima UART interfejsa i serijskog porta, kao i da nauči da interpretira talasne oblike na osciloskopu sa serijskog UART interfejsa.
