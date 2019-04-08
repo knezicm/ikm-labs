@@ -48,10 +48,10 @@ dtoverlay=pi3-disable-bt
 U Linux operativnom sistemu, trenutna podešavanja serijskog porta u okviru konzole, mogu se prikazati komandom:
 
 ```
-stty -F /dev/ttyAMA0
+stty -F /dev/ttyAMA0 -a
 ```
 
-Opcija `-F` definiše naziv virtuelnog fajla serijskog porta čija podešavanja želimo da prikažemo. Detaljnije informacije o komandi možemo da dobijemo komandom `man stty`.
+Opcija `-F` definiše naziv virtuelnog fajla serijskog porta čija podešavanja želimo da prikažemo, dok opcijom `-a` prikazujemo sva podešavanja. Detaljnije informacije o komandi možemo da dobijemo komandom `man stty`.
 
 Tako, na primjer, ako želimo da promijenimo bitsku brzinu u man stranici komande možemo da vidimo da je potrebno koristiti sljedeći format `stty` komande:
 
@@ -60,15 +60,62 @@ stty -F /dev/ttyAMA0 N
 ```
 gdje je `N` broj koji definiše bitsku brzinu.
 
-Ostale opcije u okviru komande, uglavnom se odnose na uključenje i isključenje različitih opcija kojima podešavamo parametre terminala, UART interfejsa ili serijskog porta. Opcija se uključuje navođenjem njenog imena, a isključuje navođenjem imena opcija ispred kojeg je potrebno staviti znak -.
-
-Konačno, da bi poslali podatke na serijski port, najjednostavnije je koristiti *Linux* operator za redirekciju (`>`).
+Ostale opcije u okviru komande, uglavnom se odnose na uključenje i isključenje različitih opcija kojima podešavamo parametre terminala, UART interfejsa ili serijskog porta. Opcija se uključuje navođenjem njenog imena, a isključuje navođenjem imena opcije ispred kojeg se stavlja znak manje (`-`). Na primjer, ako želimo da uključimo slanje bita parnosti, a isključimo eho, koristimo sljedeću komandu
 
 ```
-echo some_string > /dev/ttyAMA0
+stty -F /dev/ttyAMA0 parenb -echo
 ```
-U komandi iznad, string `some_string` koji bi trebao da se prikaže na terminalu `echo` komandom, preusmjerava se na serijski port `/dev/ttyAMA0`. Važno je napomenuti da se string specificira unutar dvostrukih navodnika.
 
-Da bi testirali ispravnost rada serijskog porta, potrebno je da se pošalje string koji sadrži nekoliko bajtova čija je vrijednost 0x55, a zatim ovu komunikaciju "uhvatiti" na osciloskopu (sondu osciloskopa vezati između TX pina i mase). Analizom segmenta komunikacije prikazanog na osciloskopu, potrebno je identifikovati *start*, *stop* i bite podataka, a zatim potvrditi da je poslan odgovarajući podatak sa definisanom bitskom brzinom.
+Kao što možemo da vidimo iz primjera prethodne komande, jednom komandom je moguće uključiti/isključiti više opcija istovremeno. Preporuka je da student posveti određeno vrijeme proučavanju različitih opcija i eksperimentisanju sa istim, kako bi se što više srodio sa ovom korisnom alatkom.
 
-## Zadatak za samostalnu izradu ##
+## Slanje i prijem podataka ##
+Kao što je već poznato, svi uređaji u *Linux* operativnom sistemu se vide kao fajlovi. Prema tome, da bi poslali podatke na serijski port iz konzole, potrebno je koristiti *Linux* operator za redirekciju (`>`), pri čemu se na standardni izlaz šalje podatak pomoću `echo` komande.
+
+```
+echo "Baba Vanga" > /dev/ttyAMA0
+```
+
+U komandi iznad, string `Baba Vanga` koji bi se `echo` komandom inače prikazivao na standardnom izlazu, preusmjerava se na virtuelni fajl `/dev/ttyAMA0`, koji efektivno šalje karaktere na serijski port, odnosno UART interfejs u konkretnom slučaju. Važno je napomenuti da se string koji sadrži razmake specificira unutar jednostrukih ili dvostrukih navodnika. Komadna `echo` može da primi i dodatne opcije, kao na prijmer, `-n` kojom se iz datog stringa izostavlja sekvenca za novi red (*newline*), ili `-e` koja omogućava interpretaciju specijalnih znakova koji su označeni *backslash* karakterom (korisno kod slanja podataka u heksadecimalnoj notaciji). Na primjer, ako želimo da pošaljemo heksadecimalni broj 0x1234, koristimo sljedeću komandu:
+
+```
+echo -n -e '\x12\x34' > /dev/ttyAMA0
+```
+
+Čitanje podatka sa serijskog porta obavlja se na sličan način, čitanjem sadržaja fajla. To se, na primjer, može postići komandom `cat`:
+
+```
+cat /dev/ttyAMA0
+```
+
+Ovdje je potrebno napomenuti da će komanda `cat` blokirati pristup terminalu i da se neće ništa prikazati sve dok se u prijemnom baferu ne primi podatak preko prijemne signalne linije UART interfejsa.
+
+## Podešavanje osciloskopa ##
+S obzirom da je svaki karakter kod UART prenosa počinje start bitom (nizak logički nivo), triger sistem osciloskopa treba podesiti tako da se obezbijedi zamrzavanje stanja na displeju (tzv. *single mode*) pri detekciji opadajuće ivice na signalnoj liniji. Posebnu pažnju obratiti na podešavanje vertikalne i horizontalne skale osciloskopa, koji treba da odgovaraju naponskim nivoima interfejsa i podešenoj bitskoj brzini, kao i na ostala relevantna podešavanja kanala i sonde (uključeno slabljenje, nivo trigera i sl.).
+
+## Zadaci za samostalnu izradu ##
+
+### Zadatak 1: Osnovno podešavanje parametara, slanje bajta i interpretacija poslanog podatka na osciloskopu ###
+
+U zadatku je potrebno uraditi sljedeće:
+
+1. Podesiti parametre UART interfejsa na ciljnoj platformi tako da se šalju 8-bitni podaci brzinom 19200 bps, bez parnosti i sa jedni start i jednim stop bitom.
+
+2. Priključiti sondu osciloskpa tako da se posmatra signal na predajnoj (TX) liniji UART interefejsa na ciljnoj platformi.
+
+3. Poslati podatak 0x55 i uhvatiti njegov izgled na osciloskopu. Analizirati dobijeni talasni oblik i potvrditi da se šalje definisani podatak sa podešenom bitskom brzinom. Identifikovati start i stop bite.
+
+4. Promijeniti bitsku brzinu na 4800 i poslati podatak 0x12. Ponoviti sve iz prethodne tačke.
+
+### Zadatak 2: Napredno podešavanje UART interfejsa sa slanjem i prijemom podataka ###
+
+U zadatku je potrebno uraditi sljedeće:
+
+1. Podesiti parametre UART interfejsa na ciljnoj platformi tako da se šalju 8-bitni podaci brzinom 9600 bps, bez parnosti i sa jedni start i jednim stop bitom.
+
+2. Napraviti hardversku *loopback* konekciju na ciljnoj platformi (povezati RX i TX pin).
+
+3. U jednom terminalu slati podatke pomoću `echo` komande.
+
+4. U drugom terminalu verifikovati primljene podatke pomoću `cat` komande.
+
+5. Otkloniti problem beskonačne petlje na prijemnoj strani odgovarajućim podešavanjem parametara serijskog porta.
