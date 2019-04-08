@@ -1,26 +1,26 @@
 # Laboratorijska vježba 2: UART interfejs #
 
 ## Ciljevi i ishodi ##
-Osnovni cilj vježbe je da se student upozna sa osnovnim parametrima UART interfejsa i serijskog porta, kao i da nauči da interpretira talasne oblike na osciloskopu sa serijskog UART interfejsa.
+Osnovni cilj vježbe je da se student upozna sa osnovnim parametrima UART interfejsa i serijskog porta, kao i da nauči da interpretira talasne oblike sa UART interfejsa pomoću osciloskopa.
 
 Po završetku vježbe, student će biti sposoban da:
 
-- podesi parametre UART interfejsa u okviru Linux konzole,
-- šalje podatke na UART interfejs iz Linux konzole,
-- prikazuje podatke primljene sa UART interfejsa u Linux konzoli,
+- podesi parametre UART interfejsa u okviru *Linux* konzole,
+- šalje podatke na UART interfejs iz *Linux* konzole,
+- prikazuje podatke primljene sa UART interfejsa u *Linux* konzoli,
 - interpretira talasne oblike na osciloskopu dobijene sa UART interfejsa.
 
 ## Priprema za vježbu ##
 Očekuje se da je student upoznat sa teorijskim osnovama i principom rada UART interefejsa (kroz prezentacije na predavanjima i konsultovanje dostupne literature), koji predstavlja osnovu serijskog porta u računarskim sistemima.
 
-Prije početka vježbe, student treba da ažurira stanje lokalnog repozitorijuma izvršavanjem `git pull` komande u okviru `~/ikm-labs/` direktorijuma. Ako repozitorijum nije ranije preuzet, potrebno ga je klonirati u lokalnom `home` direktorijumu korišćenjem naredbe `git clone https://github.com/knezicm/ikm-labs`. Nakon što je repozitorijum ažuriran/kloniran, potrebno je kopirati folder `labs` sa cijelim  njegovim sadržajem u `home` direktorijum trenutnog korisnika.
+Prije početka vježbe, student treba da ažurira stanje lokalnog repozitorijuma izvršavanjem `git pull` komande u okviru `~/ikm-labs/` direktorijuma. Ako repozitorijum nije ranije preuzet, potrebno ga je klonirati u lokalnom `home` direktorijumu korišćenjem naredbe `git clone https://github.com/knezicm/ikm-labs`. Nakon što je repozitorijum ažuriran/kloniran, potrebno je kopirati folder `lab2` sa cijelim  njegovim sadržajem u `home` direktorijum trenutnog korisnika.
 
 ## Aktiviranje UART interfejsa na ciljnoj platformi ##
 *Raspberry Pi* platforma posjeduje hardverski UART interfejs čiji se prijemni (RX) i predajni (TX) pinovi nalaze na GPIO konektoru na pozicijama BCM14 i BCM15, respektivno, kao što može da se vidi na slici (izvor: [Raspberry Pi Pinout](https://pinout.xyz/)).
 
 ![RX i TX pinovi](./imgs/uart-pins.png)
 
-U okviru Linux operativnog sistema, ovom interfejsu se može pristupati preko virtuelnog fajla `/dev/ttyAMA0`. *Raspbian* operativni sistem podrazumijevano rezerviše ovaj hardverski UART modul za sistemsku konzolu preko koje se može pristupati resursima operativnog sistema u cilju debagovanja. Ovo onemogućava korišćenje UART interfejsa za potrebe korisnika. Prema tome, prvo je potrebno provjeriti da li je port već zauzet (odnosno, da li je sistemska konzola omogućena na ovom portu) i, ako jeste, u podešavanjima operativnog sistema onemogućiti je kako bi serijski port bio dostupan.
+U okviru *Linux* operativnog sistema, ovom interfejsu se može pristupati preko virtuelnog fajla `/dev/ttyAMA0`. *Raspbian* operativni sistem podrazumijevano rezerviše ovaj hardverski interfejs za sistemsku konzolu preko koje se može pristupati resursima operativnog sistema u cilju debagovanja. Ovo onemogućava korišćenje UART interfejsa za potrebe korisnika. Prema tome, prvo je potrebno provjeriti da li je port već zauzet (odnosno, da li je sistemska konzola omogućena na ovom portu) i, ako jeste, u podešavanjima operativnog sistema onemogućiti je kako bi serijski port bio dostupan.
 
 Status sistemske konzole na hardverskom UART modulu provjeravamo komandom:
 
@@ -45,7 +45,7 @@ dtoverlay=pi3-disable-bt
 ```
 
 ## Podešavanje parametara serijskog porta ##
-U Linux operativnom sistemu, trenutna podešavanja serijskog porta u okviru konzole, mogu se prikazati komandom:
+U *Linux* operativnom sistemu, trenutna podešavanja serijskog porta u okviru konzole, mogu se prikazati komandom:
 
 ```
 stty -F /dev/ttyAMA0 -a
