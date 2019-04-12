@@ -100,7 +100,7 @@ U zadatku je potrebno uraditi sljedeće:
 
 1. Podesiti parametre UART interfejsa na ciljnoj platformi tako da se šalju 8-bitni podaci brzinom 19200 bps, bez parnosti i sa jedni start i jednim stop bitom.
 
-2. Priključiti sondu osciloskpa tako da se posmatra signal na predajnoj (TX) liniji UART interefejsa na ciljnoj platformi.
+2. Priključiti sondu osciloskopa tako da se posmatra signal na predajnoj (TX) liniji UART interefejsa na ciljnoj platformi.
 
 3. Poslati podatak 0x55 i uhvatiti njegov izgled na osciloskopu. Analizirati dobijeni talasni oblik i potvrditi da se šalje definisani podatak sa podešenom bitskom brzinom. Identifikovati start i stop bite.
 
