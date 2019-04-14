@@ -147,9 +147,7 @@ Električna šema datog modula, data je na sljedećoj slici (preuzeta sa sljede�
 
 ![Šema RS-485 modula](./imgs/MAX485-Module-Sch1.jpg)
 
-S obzirom da ovaj modul koristi napajanje od 5V i da digitalni ulazi/izlazi koriste očekuju, odnosno daju 5V pri visokom logičkom nivou, direktno spajanje ovog modula sa pinovima na *Raspberry Pi* platformi nije dozvoljeno. Stoga je nephodno **obavezno** koristiti posebno kolo za prilagođavanje napona sa 5V na 3.3V (npr. [3.3V-5V Voltage Translator](https://www.mikroe.com/33v-5v-voltage-translator-board) kompanije Mikroelektronika) ili na neki drugi način zaštiti ulazne pinove *Rasberry Pi* platforme (npr. serijskim vezivanjem otpornika odgovarajuće otpornosti).
-
-Na ciljnoj platformi na kojoj se pokreće `master`, student treba u terminalu da unosi podatke koji se šalju nakon pritiskanja tastera `ENTER`. Sondu osciloskopa priključiti između diferencijalnih linija A i B, a zatim posmatrati aktivnost na magistrali.
+S obzirom da ovaj modul koristi napajanje od 5V i da digitalni ulazi/izlazi koriste očekuju, odnosno daju 5V pri visokom logičkom nivou, direktno spajanje ovog modula sa pinovima na *Raspberry Pi* platformi nije dozvoljeno. Stoga je nephodno **obavezno** koristiti posebno kolo za prilagođavanje napona sa 5V na 3.3V (npr. [3.3V-5V Voltage Translator](https://www.mikroe.com/33v-5v-voltage-translator-board) kompanije Mikroelektronika) ili na neki drugi način zaštiti ulazne pinove *Rasberry Pi* platforme (npr. serijskim vezivanjem otpornika otpornosti koja je veća ili jednaka 2k).
 
 ## Zadaci za samostalnu izradu ##
 
