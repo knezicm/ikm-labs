@@ -7,7 +7,8 @@ int main ()
 {
 	int fd;						// serial port file descriptor
 	struct termios config;		// configuration termios structure
-	unsigned char sbuf = 's';	// serial buffer initialized with s(tart) character
+	unsigned char *sbuf = "Hello Serial!\n";	// send buffer initialized with some data
+	unsigned char rbuf;			// receive buffer
 	
 	// TODO: open serial port and check for errors while opening
 
@@ -34,11 +35,24 @@ int main ()
 	}
 	
 	// loop infinitely until q(uit) character is received
-	while (sbuf != 'q')
+	while (1)
 	{
-		// software loopback
-		if (read(fd, &sbuf, 1) > 0)
-			write(fd, &sbuf, 1);
+		// read data from serial port
+		if (read(fd, &rbuf, 1) > 0)
+		{
+			// check for quit condition to break the infinite loop
+			if (rbuf == 'q')
+				break;
+			// else print received character to the console
+			else
+			{
+				putchar(rbuf);
+				fflush(stdout);
+			}
+		}
+		
+		// send some data
+		write(fd, &sbuf, 14);
 	}
 
 	// close the serial port
