@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
@@ -8,6 +9,7 @@ int main ()
 	int fd;						// serial port file descriptor
 	struct termios config;		// configuration termios structure
 	unsigned char *sbuf = "Hello Serial!\n";	// send buffer initialized with some data
+	int sbuf_len = strlen(sbuf);		// send buffer length
 	unsigned char rbuf;			// receive buffer
 	
 	// TODO: open serial port and check for errors while opening
@@ -52,7 +54,13 @@ int main ()
 		}
 		
 		// send some data
-		write(fd, &sbuf, 14);
+		if (*sbuf != '\0')
+			write(fd, sbuf++, 1);
+		else
+			sbuf -= sbuf_len;
+		
+		// wait 100ms to let data be processed
+		usleep(100000);
 	}
 
 	// close the serial port
