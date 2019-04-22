@@ -43,6 +43,7 @@ int main()
 	for (;;)
 	{
 		// TODO: Initiate an SPI transaction to obtain acceleration values
+
 		// Print the obtained acceleration values
 		printf("X: %d\n", (rx_buffer[2] << 8) | (rx_buffer[1]));
 		printf("Y: %d\n", (rx_buffer[4] << 8) | (rx_buffer[3]));
