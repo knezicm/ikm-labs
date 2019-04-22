@@ -177,13 +177,13 @@ Modul sa senzorom za mjerenje ubrzanja (akelerometar) ADXL345 posjeduje dva inte
 
 Modul dostupan za realizaciju laboratorijske vježbe prevezan je tako da se omogući lako povezivanje sa *Raspberry Pi* platformom. Postoje dvije varijante: (1) sa eksternim *pull-up* otpornicima i (2) bez eksternih *pull-up* otpornika (slika ispod).
 
-![ADXL345 moduli](./imgs/accell-boards.png)
+![ADXL345 moduli](./imgs/accell-boards.png =650x)
 
 Iako druga varijanta modula nema eksterne *pull-up* otpornike, koji su obavezni u slučaju komunikacije preko I2C interfejsa, ovo ne predstavlja ograničenje, jer *Raspberry Pi* na I2C linijama ima *pull-up* otpornike.
 
 Pinovi za povezivanje ADXL345 modula preko prethodno pomenutih serijskih interfejsa, prikazani su na slici ispod.
 
-![ADXL345 pinovi](./imgs/accell-pins.jpg)
+![ADXL345 pinovi](./imgs/accell-pins.jpg =750x)
 
 Prvo treba obratiti pažnju na pinove za napajanje modula. To su pinovi označeni sa 3.3V i GND (masa), i oni se povezuju posljednji (prvo masa pa onda napajanje).
 
