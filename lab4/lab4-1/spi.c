@@ -37,7 +37,7 @@ int main()
 	// TODO: Initiate an SPI transaction to obtain Device ID
 	
 	// Print the obtained Device ID
-	printf("Device ID is %x.\n", rx_buffer[1]);
+	printf("Device ID is 0x%x.\n", rx_buffer[1]);
 	
 	// Loop forever printing acceleration values every second
 	for (;;)
