@@ -5,9 +5,13 @@
 #include <linux/spi/spidev.h>
 #include <stdio.h>
 
+// Address of the Device ID register
 #define DEVID		0x00
+// Address of the register holding low-byte of x-axis acceleration
 #define DATAX0		0x32
+// Position of read/write bit (R/W) in SPI command byte
 #define RW_BIT_POS	7
+// Position of multi byte bit (MB) in SPI command byte
 #define MB_BIT_POS	6
 
 int main()
@@ -15,9 +19,16 @@ int main()
 	int fd;
 	
 	unsigned char rx_buffer[7];
-	unsigned char tx_buffer[] = {DEVID | (1 << RW_BIT_POS) & ~(1 << MB_BIT_POS), 0x00, DATAX0 | (1 << RW_BIT_POS) | (1 << MB_BIT_POS), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	unsigned char tx_buffer[] = {
+		// SPI Transaction 1: read Device ID register
+		DEVID | (1 << RW_BIT_POS) & ~(1 << MB_BIT_POS), /* command: single byte (MB=0) read (R/W=1) from DEVID register */
+		0x00, /* dummy byte sent when we receive data from ADXL345 */
+		// SPI Transaction 2: read acceleration from all three axes
+		DATAX0 | (1 << RW_BIT_POS) | (1 << MB_BIT_POS), /* command: multi byte (MB=1) read (R/W=1) starting from DATAX0 register */
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00 /* 6 dummy bytes sent while we are receiving 6 bytes from ADXL345 (2 bytes per axis) */
+	};
 	
-	// TODO: Initialize the spi_ioc_transfer structure aray
+	// TODO: Initialize the spi_ioc_transfer structure array
 	struct spi_ioc_transfer spi[] = {
 		// Add your code here
 	};
