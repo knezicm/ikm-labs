@@ -5,28 +5,34 @@
 #include <linux/i2c.h>
 #include <stdio.h>
 
+// Address of the Device ID register
 #define DEVID			0x00
+// Address of the register holding low-byte of x-axis acceleration
 #define DATAX0			0x32
+// I2C address of ADXL345
 #define ADXL345_I2C_ADDR	0x53
 
 int main()
 {
 	int fd;
+	// Register addresses:
+	// You can get the address of DEVID register from regs[0] and
+	// the address of DATAX0 register from regs[1]
 	unsigned char regs[] = {DEVID, DATAX0};
 	unsigned char rx_buffer[6];
 	
-	// TODO: initialize array of structures struct i2c_msg to define I2C messages
+	// TODO: Initialize array of structures struct i2c_msg to define I2C messages
 	struct i2c_msg iomsgs[] = {
 		// Add your code here
 	};
 
-	// TODO: initialize array of structures struct i2c_rdwr_ioctl_data to define I2C transactions
+	// TODO: Initialize array of structures struct i2c_rdwr_ioctl_data to define I2C transactions
 	struct i2c_rdwr_ioctl_data msgset[] = {
 		// Add your code here
 	};
 
 	// Try to open I2C device
-	fd = open("/dev/i2c-0", O_RDWR);
+	fd = open("/dev/i2c-1", O_RDWR);
 	
 	// Check for any errors
 	if (fd < 0)
