@@ -76,8 +76,19 @@ if (modbus_connect(ctx) == -1) {
 }
 // Do some communication over Modbus
 ...
+// Closing the connection
 modbus_close(ctx);
 modbus_free(ctx);
+```
+
+```
+modbus_enable_rpi(ctx, TRUE);
+modbus_configure_rpi_bcm_pin(ctx, BCM_PIN_DE);
+modbus_rpi_pin_export_direction(ctx);
+// Do some communication over Modbus
+...
+// On closing the connection
+modbus_rpi_pin_unexport_direction(ctx);
 ```
 
 Da bi koristili prethodno opisane funkcije, potrebno je uključiti odgovarajuće sistemske *header* fajlove u kojima su definisani njihovi prototipi. S tim u vezi, u zaglavlju programa, treba da se nalaze sljedeće direktive:
