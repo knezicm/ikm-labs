@@ -39,17 +39,57 @@ make
 make install
 ```
 
+|Funkcija|Opis|
+|--------|----|
+|[`modbus_new_rtu()`](https://libmodbus.org/docs/v3.0.6/modbus_new_rtu.html)|Kreira novi *libmodbus* kontekst za RTU tip protokola|
+|[`modbus_free()`](https://libmodbus.org/docs/v3.0.6/modbus_free.html)|Oslobađa resurse *libmodbus* konteksta|
+|[`modbus_set_debug()`](https://libmodbus.org/docs/v3.0.6/modbus_set_debug.html)|Uključuje/isključuje mod za debagovanje|
+|[`modbus_set_slave()`](https://libmodbus.org/docs/v3.0.6/modbus_set_slave.html)|Postavlja identifikator *slave* uređaja u *libmodbus* kontekstu|
+|[`modbus_connect()`](https://libmodbus.org/docs/v3.0.6/modbus_connect.html)|Uspostavlja Modbus vezu|
+|[`modbus_close()`](https://libmodbus.org/docs/v3.0.6/modbus_close.html)|Raskida Modbus vezu|
+|[`modbus_read_bits()`](https://libmodbus.org/docs/v3.0.6/modbus_read_bits.html)|Čita stanje više izlaznih bita (FC=0x01)|
+|[`modbus_read_input_bits()`](https://libmodbus.org/docs/v3.0.6/modbus_read_input_bits.html)|Čita stanje više ulaznih bita (FC=0x02)|
+|[`modbus_read_registers()`](https://libmodbus.org/docs/v3.0.6/modbus_read_registers.html)|Čita stanje više izlaznih registara (FC=0x03)|
+|[`modbus_read_input_registers()`](https://libmodbus.org/docs/v3.0.6/modbus_read_input_registers.html)|Čita stanje više ulaznih registara (FC=0x04)|
+|[`modbus_write_bit()`](https://libmodbus.org/docs/v3.0.6/modbus_write_bit.html)|Definiše stanje izlaznog bita (FC=0x05)|
+|[`modbus_write_register()`](https://libmodbus.org/docs/v3.0.6/modbus_write_register.html)|Upisuje vrijednost u izlazni registar (FC=0x06)|
+|[`modbus_write_bits()`](https://libmodbus.org/docs/v3.0.6/modbus_write_bits.html)|Definiše stanje više izlaznih bita (FC=0x0F)|
+|[`modbus_write_registers()`](https://libmodbus.org/docs/v3.0.6/modbus_write_registers.html)|Upisuje vrijednosti u više izlaznih registara (FC=0x10)|
+|[`modbus_write_and_read_registers()`](https://libmodbus.org/docs/v3.0.6/modbus_write_and_read_registers.html)|Upisuje vrijednosti u više izlaznih registara, a zatim čita stanje više izlaznih registara (FC=0x17)|
+
+```
+modbus_t *ctx;
+...
+ctx = modbus_new_rtu("/dev/ttyAMA0", 19200, 'N', 8, 1);
+
+if (ctx == NULL) {
+	fprintf(stderr, "Unable to create the libmodbus context!\n");
+	return -1;
+}
+```
+
+```
+if (modbus_connect(ctx) == -1) {
+	fprintf(stderr, "Connection failed.\n");
+	modbus_free(ctx);
+	return -1;
+}
+// Do some communication over Modbus
+...
+modbus_close(ctx);
+modbus_free(ctx);
+```
+
 Da bi koristili prethodno opisane funkcije, potrebno je uključiti odgovarajuće sistemske *header* fajlove u kojima su definisani njihovi prototipi. S tim u vezi, u zaglavlju programa, treba da se nalaze sljedeće direktive:
 
 ```
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/types.h>
-#include <linux/spi/spidev.h>
+#include <stdio.h>
+#include <modbus.h>
 ```
 
 ## Modbus *slave* sa 4-kanalnim relejnim izlazom ##
+Parametri serijske komunikacije: 9600 bps, 8 bita podataka, bez parnosti, jedan stop bit. Adresa Modbus *slave* uređaja je 1.
+
 Modul sa senzorom za mjerenje ubrzanja (akelerometar) ADXL345 posjeduje dva interfejsa za komunikaciju: SPI i I2C. U oba slučaja, ADXL345 ima ulogu *slave* uređaja. I2C interfejs se omogućava ako je CS pin na visokom logičkom nivou. Za SPI, moguće je koristiti trožični i četvorožični mod. Konkretan modul koji se koristi u ovoj vježbi, koristi standardni četvorožični SPI mod.
 
 Modul dostupan za realizaciju laboratorijske vježbe prevezan je tako da se omogući lako povezivanje sa *Raspberry Pi* platformom. Postoje dvije varijante: (1) sa eksternim *pull-up* otpornicima i (2) bez eksternih *pull-up* otpornika (slika ispod).
