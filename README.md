@@ -1,6 +1,14 @@
 # Industrijske komunikacione mreže (2322)
 U okviru ovog repozitorijuma, studenti mogu da pronađu sve materijale nephodne za realizaciju laboratorijskih vježbi iz predmeta Industrijske komunikacione mreže (2322). Laboratorijske vježbe su bazirane na *Raspberry Pi* platformi i *Linux* operativnom sistemu. Za razvoj i prevođenje programa koji se izvršavaju na *Raspberry Pi* platformi, studentima je na raspolaganju specifično kreirana virtuelna mašina sa *Ubuntu 16.04 LTS* operativnim sistemom (*rpi-linux-dev*), koja se pokreće u okviru *VMWare Workstation Player* softvera za virtuelizaciju.
 
+## Završni ispit ##
+Završni ispit čini 40% ukupne ocjene i polaže se iz dva dijela:
+
+- [eliminatorna ispitna pitanja](./exam-questions.md) (maksimalno 10 bodova)
+- usmeni dio ispita (maksimalno 30 bodova)
+
+Da bi student zadovoljio na završnom ispitu, potrebno je da ostvari najmanje 8 bodova u dijelu koji se odnosi na eliminatorna pitanja i 50% na usmenom dijelu ispita.
+
 ## Fond radnih sati
 Za realizaciju ovog kursa, predviđen je sedmični fond od 2 časa predavanja i 2 časa vježbi. Vježbe dominantno čini rad u laboratoriji, s tim da određeni broj časova može biti realizovan kroz klasične auditorne, odnosno pokazne laboratorijske vježbe. Važno je napomenuti da kurs nosi 5 ECTS kredita, što efektivno znači da je za njegovu realizaciju predviđeno 100 radnih sati tokom semestra. S obzirom da je za direktnu nastavu predviđeno 60 sati, preostalih 40 sati (otprilike 2.67 sati sedmično) čini samostalan rad studenta.
 
