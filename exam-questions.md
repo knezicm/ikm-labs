@@ -2,7 +2,16 @@
 
 ## Uvod u industrijske komunikacione mreže ##
 
-1.
+1. Da li se kod 4-20mA standarda koristi analogni ili digitalni prenos podataka?
+2. Kakva je razlika između ISO OSI i TCP/IP komunikacionog modela?
+3. Šta je protokol?
+4. Šta je servis?
+5. Objasniti vezu između PDU i SDU.
+6. Širina propusnog opsega (*bandwidth*).
+7. Propusnost (*throughput*).
+8. Vrijeme propagacije signala (*propagation time*).
+9. Vrijeme predaje (*transmission time*).
+10. Vrijeme ciklusa i RTT (*Round Trip Time*).
 
 ## Interfejsi ##
 
@@ -49,4 +58,13 @@
 
 ## Industrijski protokoli ##
 
-1. 
+1. Navesti osnovne servise na sloju linka podataka.
+2. Šta je omeđavanje okvira i zašto je ono potrebno?
+3. Navesti načine omeđavanja okvira.
+4. Šta je umetanje bajtova?
+5. Šta je i čemu služi ESC bajt?
+6. Šta je umetanje bita?
+7. Ako u polju podataka nekog okvira imamo sekvencu bita `01110111110111011111111100000111`, napisati sekvencu koja se dobije nakon umetanja bita. Posebno označiti umetnute bite.
+8. Ako u primljenom okviru imamo sekvencu bita `01110111110011101111101111000001111`, napisati sekvencu koja se dobije nakon izbacivanja umetnutih bita. Posebno označiti umetnute bite.
+9. Koliki maksimalni *overhead* možemo imati prilikom umetanja bajtova i pod kojim uslovima se on može pojaviti?
+10. Koliki maksimalni *overhead* možemo imati prilikom umetanja bita i pod kojim uslovima se on može pojaviti?
