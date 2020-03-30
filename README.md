@@ -1,6 +1,12 @@
 # Industrijske komunikacione mreže (2322)
 U okviru ovog repozitorijuma, studenti mogu da pronađu sve materijale nephodne za realizaciju laboratorijskih vježbi iz predmeta Industrijske komunikacione mreže (2322). Laboratorijske vježbe su bazirane na *Raspberry Pi* platformi i *Linux* operativnom sistemu. Za razvoj i prevođenje programa koji se izvršavaju na *Raspberry Pi* platformi, studentima je na raspolaganju specifično kreirana virtuelna mašina sa *Ubuntu 16.04 LTS* operativnim sistemom (*rpi-linux-dev*), koja se pokreće u okviru *VMWare Workstation Player* softvera za virtuelizaciju.
 
+Ukoliko koristite lični računar i *VMWare Workstation Player* softvera za virtuelizaciju, preporuka je da koristite preinstaliran *Ubuntu 16.04 LTS* operativni sistem, koji možete da preuzmete sa sljedećeg linka:
+
+https://www.osboxes.org/ubuntu/#ubuntu-16-04-vmware
+
+Za ovu virtuelnu mašinu, podrazumijevani korisnik sa administratorskim privilegijama je `osboxes.org`, pri čemu je podrazumijevana šifra ista kao korisničko ime.
+
 ## Završni ispit ##
 Završni ispit čini 40% ukupne ocjene i polaže se iz dva dijela:
 
@@ -31,105 +37,131 @@ Za uspješnu i efikasnu realizaciju laboratorijskih vježbi, preporučuje se da 
 
 ## Priprema za realizaciju laboratorijskih vježbi
 
-*Priprema kros-kompajlera na Raspbian operativnom sistemu*
+Ukoliko koristite vlastiti računar, bilo da se radi o virtuelnoj mašini ili o stvarnoj instalaciji *Linux* operativnog sistema, potrebno je da pripremite razvojnu platformu u skladu sa instrukcijama datim ispod. Pretpostavićemo da se razvoj koristi PC računar sa *Ubuntu 16.04 LTS* operativnim sistemom. Novije verzije *Ubuntu* distribucije bi trebalo da rade bez problema. Međutim, napominjemo da su instrukcije date ispod testirane samo na pomenutoj verziji. Druge distribucije će možda zahtijevati dodatna prilagođenja.
 
-Kros-kompajler je kompajler koji kreira izvršni kod za platformu koja nije ona na kojoj se izvršava kompajler (npr. kompajler koji radi na Win 7 PC-u, ali generiše kod koji radi na Android smartphone-u). Kros-kompajler je neophodan za kompajliranje koda za više platformi uz jednog razvojnog hosta. Direktno kompajliranje na ciljnoj platformi može biti neizvodivo, npr. na mikrokontroleru ugrađenog sistema, jer ti sistemi ne sadrže operativni sistem.
+*Instalacija neophodnih alata*
 
-Koristićemo kros-kompajler da napravimo softver za *RaspberryPi* na našem, glavnom računaru, koristeći svu njegovu snagu i njegove prednosti.
+Za realizaciju laboratorijskih vježbi, potrebno je da imate instalirane sljedeće alate:
 
-Koristićemo biblioteku *wiringPi* kao primjer. 
+* GCC prevodilac (kompajler)
+* Git softver za verzionisanje koda
 
-*Dodavanje alatki kros-kompajlera i platforme na naš računar*
-
--	Kreirati direktorijum unutar Home direktorijuma na virtuelnoj mašini, pod nazivom *student* (u njega ćemo smještati sve):
-   ```
-   mkdir student
-   ```
--	Pristupiti praznom direktorijumu student:
-  ```
-  cd student \
-  ```
--	Povući *RaspberryPi toolchain* sa: https://github.com/raspberrypi/tools ()
-  ```
-  git pull https://github.com/raspberrypi/tools 
-  ```
- **Napomena:** da bi mogli povući *RaspberryPi toolchain*, neophodno je instalirati *git*, i to komandom:
-   ```
-     sudo apt-get install git
-   ```
-   a zatim i kreirati *git repoziturijum*:
-   ```
-   git init
-   ```
-  
-  
-Dobijene alate ćemo koristiti da napravimo vlastite *RaspberryPi* aplikacije. Ovaj direktorijum (raspberrypi/tools) sadrži alatke za build-ovanje, standardne biblioteke i sistemske pozive koji će trebati našoj aplikaciji.
-
-Koristićemo standardnu pthreads biblioteku (koja se nalazi u preuzetom toolchain-u), lokalno-kompajliranu open-source *wiringPi* biblioteku i trenutni C11 standard sa našim kompajlerom.
-
-Preostalo je da povučemo i instaliramo *wiringPi* biblioteku:
-  ```
-  git clone git://git.drogon.net/wiringPi
-  cd wiringPi
-  git pull origin
-  sudo ./build
-  ```
-
-Nakon komande *build*, potrebno je kompajlirati ovu biblioteku a za to je potrebno da napravimo fajlove *"CMakeLists.txt"* i *"Toolchain-rpi.cmake"* unutar direktorijuma u kom nam se nalazi biblioteka /wiringPi/wiringPi. Fajlovi treba da budu sledećeg sadržaja:
-
-CMakeLists.txt:
+Distribucije *Ubuntu* operativnog sistema se obično isporučuju sa GCC kompajlerom. Da biste utvrdili da li je ovaj kompajler instaliran na razvojnoj platformi, možete pokrenuti sljedeće komandu u terminalu:
 
 ```
-cmake_minimum_required(VERSION 3.0)
-# Have CMake find our pthreads library within our toolchain (required for this library)
-set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-find_package(Threads REQUIRED)
-# add all the *.c files as sources
-FILE(GLOB SRC_FILES *.c)
-# make this output a shared library (with .so output)
-add_library (wiringPi SHARED ${SRC_FILES})
-# be sure to include the current source directory for header files
-target_include_directories (wiringPi PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-# add the following required libraries:
-# Threads, Math, Crypt, and RealTime
-target_link_libraries(wiringPi ${CMAKE_THREAD_LIBS_INIT} crypt m rt)
+gcc --version
 ```
 
-Toolchain-rpi.cmake:
+Ako je kompajler instaliran, trebalo bi da dobijete ispis sličan ovome:
 
 ```
-# Define our host system
-SET(CMAKE_SYSTEM_NAME Linux)
-SET(CMAKE_SYSTEM_VERSION 1)
-# Define the cross compiler locations
-SET(CMAKE_C_COMPILER   /home/pi/student/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
-SET(CMAKE_CXX_COMPILER /home/pi/student/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
-# Define the sysroot path for the RaspberryPi distribution in our tools folder 
-SET(CMAKE_FIND_ROOT_PATH /home/pi/student/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/arm-linux-gnueabihf/sysroot/)
-# Use our definitions for compiler tools
-SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-# Search for libraries and headers in the target directories only
-SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-add_definitions(-Wall -std=c11)
+gcc (Ubuntu 5.4.0-6ubuntu1~16.04.11) 5.4.0 20160609
+Copyright (C) 2015 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ```
 
-**Napomena:** Unutar "Toolchain-rpi.cmake" fajla, obratiti pažnju na definisanu putanju kompajlera, to mora biti putanja na kojoj se trenutno nalazi kompajler koji smo povukli zajedno sa *RaspberryPi toolchain*-on.
+u suprotnom ćete dobiti informaciju o tome da kompajler nije instaliran
 
-Nakon kreiranja ovih fajlova, potrebno je još samo pokrenuti komande:
+Ako GCC kompajler, iz bilo kojeg razloga, nije uključen u distribuciju koju koristite, možete da ga instalirate sljedećom komandom (važi samo za distribucije bazirane na *Debian* operativnom sistemu, poput *Ubuntu*):
 
 ```
-cmake . -DCMAKE_TOOLCHAIN_FILE=Toolchain-rpi.cmake
-make
+sudo apt-get install build-essential
 ```
 
-Biblioteka *wiringPi* je sada spremna za korištenje.
+Git softver ćemo primarno koristiti za preuzimanje izvornog koda sa repozitorijuma kursa, a povremeno i za predaju zadataka koji se rade u okviru laboratorijskih vježbi. Na sličan način, kao i u slučaju GCC kompajlera, prvo ćemo provjeriti da li je ovaj softver već instaliran na distribuciji koju koristimo:
 
-- CMake 
+```
+git --version
+```
 
-Cmake se koristi za kreiranje makefile-ova za projekat. Cmake ćemo morati da pokrenemo bar dva puta: jednom za našu glavnu aplikaciju, i jednom za našu prilagođenu biblioteku. Svaki od ova dva slučaja će morati da ima sopstveni tekstualni fajl “*CmakeLists.txt*” u kom je specificirano kako će se kompajlirati izvorni fajl, koji je toolchain fajl itd.
-Napomena: Ovi fajlovi su dostupni na repozitorujumu za svaku laboratorijsku vježbu.
+Ukoliko kao izlaz dobijemo
 
+```
+The program 'git' is currently not installed. You can install it by typing:
+sudo apt install git
+```
+
+to znači da Git softver nije instaliran. Možemo ga instalirati komandom:
+
+```
+sudo apt-get install git
+```
+
+nakon čega, ako pokrenemo `git --version`, dobijamo ispis sličan datom ispod:
+
+```
+git version 2.7.4
+```
+
+**Napomena:** Prije instalacije bilo kojeg softverskog paketa na *Ubuntu* operativnom sistemu, dobra praksa je da se pokrene ažuriranje lokalne baze podataka u kojoj se čuvaju informacije o najnovijim verzijama softverskih paketa. To možete učiniti komandom `sudo apt-get update`.
+
+Ukoliko prilikom pokretanja instalacije Git softvera dobijete sljedeću poruku
+
+```
+E: Could not get lock /var/lib/dpkg/lock-frontend – open (11: Resource temporarily unavailable)
+E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), is another process using it?
+```
+
+onda to znači da operativni sistem instalira posljednja ažuriranja, pa ćete morati sačekati nekoliko minuta prije ponovnog pokretanja instalacije.
+
+Uz prethodno pomenute alate, da bi razvojna platforma bila spremna, potrebno je još obezbijediti i kros-kompajler za ciljnu platformu (*Raspberry Pi* u našem slučaju).
+
+### Priprema kros-kompajlera za Raspberry Pi platformu
+
+Kros-kompajler je kompajler koji kreira izvršni fajl koji će se izvršavati na platformi različitoj od one na kojoj pokrećemo proces prevođenja (npr. kompajler koji se izvršava na x86 arhitekturi generiše binarni fajl koji će se izvršavati na ARM arhitekturi). Direktno prevođenje na ciljnoj platformi često nije pogodno, jer one tipično ne nude komforno radno okruženje kao što je slučaj sa PC računarom, a često su i ograničene sa resursima. Kao posljedicu imamo da, čak i ako postoji mogućnost direktnog prevođenja, to prevođenje značajno duže traje, a imamo i ograničene mogućnosti za debagovanje. U određenim slučajevima, direktno prevođenje je čak i neizvodivo, npr. na mikrokontroleru ugrađenog sistema, ukoliko ti sistemi ne sadrže operativni sistem.
+
+U okviru laboratorijskih vježbi ovog kursa, koristićemo kros-kompajler za prevođenje izvornog koda koji treba da se izvršava na ARM arhitekturi (*RaspberryPi* platforma). S obzirom da, kao razvojnu platformu, koristimo PC računar sa *Ubuntu* operativnim sistemom, prvo je potrebno preuzeti alate neophodne za kros-kompajliranje.
+
+Prije svega, kreiraćemo direktorijum u `home` direktorijumu razvojne mašine, sa nazivom `rpi` u kojem ćemo smještati sve alate i biblioteke neophodne za rad sa *Raspberry Pi* platformom:
+
+```
+mkdir rpi
+cd rpi
+```
+
+Kada se nalazimo u `rpi` direktorijumu, sljedećom komandom možemo preuzeti skup alata za kros-kompajliranje za ciljnu platformu:
+
+```
+git clone --depth 1 https://github.com/raspberrypi/tools
+```
+
+Da bi kros-kompajler bio globalno vidljiv prilikom svake sesije terminala, potrebno je da eksportujemo putanju do njega u okviru `PATH` sistemske varijable:
+
+```
+export PATH=$PATH:/path/to/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin
+```
+
+pri čemu je potrebno naglasiti da `/path/to/tools/` trebate zamijeniti apsolutnom putanjom do lokacije na koju ste preuzeli skup alata za kros-kompajliranje (ako se trenutno nalazite na toj lokaciji, absolutnu putanju možete dobiti komandom `pwd`). Tako, na primjer, ako koristite virtuelnu mašinu dostupnu u laboratoriji (i ako ste doslovno pratili instrukcije date iznad), onda će komanda izgledati kao što je prikazano ispod.
+
+```
+export PATH=$PATH:/home/student/rpi/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin
+```
+
+U slučaju virtuelne mašine koju koristite na vlastitom računaru, lokacija alata, kao i nazivi `home` direktorijuma, mogu da se razlikuju. Važno je napomenuti da je ovaj korak veoma bitan, jer bez njega kros-kompajler neće biti globalno vidljiv unutar terminala.
+
+Da biste aktuelizovali promjene u trenutnoj sesiji, potrebno je da pokrenete sljedeću komandu:
+
+```
+. ~/.bashrc
+```
+
+**Napomena:** Prethodnu komandu je potrebno pokrenuti samo jednom, i to ako ne želite da zatvorite i ponovo pokrećete trenutnu instancu terminala. Kada ponovo pokrenete terminal, putanja će biti automatski aktuelizovana.
+
+Konačno, da biste potvrdili da imate pristup kros-kompajleru iz terminala, tj. da je sve što je prethodno opisano napravljeno kako treba, možete pokrenuti sljedeću komandu:
+
+```
+arm-linux-gnueabihf-gcc --version
+```
+
+koja, kao rezultat, treba da ispiše sljedeći izlaz:
+
+```
+arm-linux-gnueabihf-gcc (crosstool-NG crosstool-ng-1.22.0-88-g8460611) 4.9.3
+Copyright (C) 2015 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+```
 
 ## Dodatna literatura
 TBA
