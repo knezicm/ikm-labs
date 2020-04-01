@@ -105,15 +105,15 @@ E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), is an
 
 onda to znači da operativni sistem instalira posljednja ažuriranja, pa ćete morati sačekati nekoliko minuta prije ponovnog pokretanja instalacije.
 
-Uz prethodno pomenute alate, da bi razvojna platforma bila spremna, potrebno je još obezbijediti i kros-kompajler za ciljnu platformu (*Raspberry Pi* u našem slučaju).
+Uz prethodno pomenute alate, da bi razvojna platforma bila spremna, potrebno je još obezbijediti i kroskompajler za ciljnu platformu (*Raspberry Pi* u našem slučaju).
 
-### Priprema kros-kompajlera za Raspberry Pi platformu
+### Priprema kroskompajlera za Raspberry Pi platformu
 
-Kros-kompajler je kompajler koji kreira izvršni fajl koji će se izvršavati na platformi različitoj od one na kojoj pokrećemo proces prevođenja (npr. kompajler koji se izvršava na x86 arhitekturi generiše binarni fajl koji će se izvršavati na ARM arhitekturi). Direktno prevođenje na ciljnoj platformi često nije pogodno, jer one tipično ne nude komforno radno okruženje kao što je slučaj sa PC računarom, a često su i ograničene sa resursima. Kao posljedicu imamo da, čak i ako postoji mogućnost direktnog prevođenja, to prevođenje značajno duže traje, a imamo i ograničene mogućnosti za debagovanje. U određenim slučajevima, direktno prevođenje je čak i neizvodivo, npr. na mikrokontroleru ugrađenog sistema, ukoliko ti sistemi ne sadrže operativni sistem.
+Kroskompajler je kompajler koji kreira izvršni fajl koji će se izvršavati na platformi različitoj od one na kojoj pokrećemo proces prevođenja (npr. kompajler koji se izvršava na x86 arhitekturi generiše binarni fajl koji će se izvršavati na ARM arhitekturi). Direktno prevođenje na ciljnoj platformi često nije pogodno, jer one tipično ne nude komforno radno okruženje kao što je slučaj sa PC računarom, a često su i ograničene sa resursima. Kao posljedicu imamo da, čak i ako postoji mogućnost direktnog prevođenja, to prevođenje značajno duže traje, a imamo i ograničene mogućnosti za debagovanje. U određenim slučajevima, direktno prevođenje je čak i neizvodivo, npr. na mikrokontroleru ugrađenog sistema, ukoliko ti sistemi ne sadrže operativni sistem.
 
-U okviru laboratorijskih vježbi ovog kursa, koristićemo kros-kompajler za prevođenje izvornog koda koji treba da se izvršava na ARM arhitekturi (*RaspberryPi* platforma). S obzirom da, kao razvojnu platformu, koristimo PC računar sa *Ubuntu* operativnim sistemom, prvo je potrebno preuzeti alate neophodne za kros-kompajliranje.
+U okviru laboratorijskih vježbi ovog kursa, koristićemo kroskompajler za prevođenje izvornog koda koji treba da se izvršava na ARM arhitekturi (*RaspberryPi* platforma). S obzirom da, kao razvojnu platformu, koristimo PC računar sa *Ubuntu* operativnim sistemom, prvo je potrebno preuzeti alate neophodne za kroskompajliranje.
 
-Prije svega, kreiraćemo direktorijum u `home` direktorijumu razvojne mašine, sa nazivom `rpi` u kojem ćemo smještati sve alate i biblioteke neophodne za rad sa *Raspberry Pi* platformom:
+Prije svega, kreiraćemo direktorijum u `home` direktorijumu razvojne platforme, sa nazivom `rpi` u kojem ćemo smještati sve alate i biblioteke neophodne za rad sa *Raspberry Pi* platformom:
 
 ```
 mkdir rpi
@@ -126,13 +126,13 @@ Kada se nalazimo u `rpi` direktorijumu, sljedećom komandom možemo preuzeti sku
 git clone --depth 1 https://github.com/raspberrypi/tools
 ```
 
-Da bi kros-kompajler bio globalno vidljiv prilikom svake sesije terminala, potrebno je da eksportujemo putanju do njega u okviru `PATH` sistemske varijable:
+Da bi kroskompajler bio globalno vidljiv prilikom svake sesije terminala, potrebno je da eksportujemo putanju do njega u okviru `PATH` sistemske varijable:
 
 ```
 export PATH=$PATH:/path/to/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin
 ```
 
-pri čemu je potrebno naglasiti da `/path/to/tools/` trebate zamijeniti apsolutnom putanjom do lokacije na koju ste preuzeli skup alata za kros-kompajliranje (ako se trenutno nalazite na toj lokaciji, absolutnu putanju možete dobiti komandom `pwd`). Tako, na primjer, ako koristite virtuelnu mašinu dostupnu u laboratoriji (i ako ste doslovno pratili instrukcije date iznad), onda će komanda izgledati kao što je prikazano ispod.
+pri čemu je potrebno naglasiti da `/path/to/tools/` trebate zamijeniti apsolutnom putanjom do lokacije na koju ste preuzeli skup alata za kroskompajliranje (ako se trenutno nalazite na toj lokaciji, absolutnu putanju možete dobiti komandom `pwd`). Tako, na primjer, ako koristite virtuelnu mašinu dostupnu u laboratoriji (i ako ste doslovno pratili instrukcije date iznad), onda će komanda izgledati kao što je prikazano ispod.
 
 ```
 export PATH=$PATH:/home/student/rpi/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin
@@ -148,7 +148,7 @@ Da biste aktuelizovali promjene u trenutnoj sesiji, potrebno je da pokrenete slj
 
 **Napomena:** Prethodnu komandu je potrebno pokrenuti samo jednom, i to ako ne želite da zatvorite i ponovo pokrećete trenutnu instancu terminala. Kada ponovo pokrenete terminal, putanja će biti automatski aktuelizovana.
 
-Konačno, da biste potvrdili da imate pristup kros-kompajleru iz terminala, tj. da je sve što je prethodno opisano napravljeno kako treba, možete pokrenuti sljedeću komandu:
+Konačno, da biste potvrdili da imate pristup kroskompajleru iz terminala, tj. da je sve što je prethodno opisano napravljeno kako treba, možete pokrenuti sljedeću komandu:
 
 ```
 arm-linux-gnueabihf-gcc --version
