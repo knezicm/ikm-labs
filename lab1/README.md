@@ -142,6 +142,8 @@ scp /path/to/wiringPi/lib/libwiringPi.so root@192.168.23.xxx:/usr/lib
 
 gdje `xxx` označava dio IP adrese koji je jedinstven za svaki *Raspberry Pi*. Alternativno, pri daljinskom pristupu ciljnoj platformi, potrebno je da koristite odgovarajući *hostname* i *port* kao što je to ranije pojašnjeno.
 
+Ovdje treba napomenuti da *Rasbian* dolazi preinstaliran bez podešene šifre za administratorski korisnički nalog (`root`), tako da komanda iznad u većini slučajeva ne može da se koristi. U tom slučaju, biblioteku trebate kopirati korišćenjem `scp` komande u `home` direktorijum korisnika `pi`, a zatim je, nakon što se logujete sa ovim korisničkim nalogom, prebaciti u `/usr/lib` (korišćenjem `sudo` da bi imali administratorske privilegije).
+
 **Napomena:** Prenos biblioteke se može obaviti i pomoću pravila `make` alata koje je definisano u `Makefile` fajlu, na način kako je ranije objašnjeno.
 
 Da bismo preveli dati primjer, koji se dinamički linkuje sa *wiringPi* bibliotekom, prvo je potrebno obezbijediti da se student nalazi u direktorijumu `lab1-3/src` na razvojnoj platformi, u kojem se nalazi izvorni kod neophodan za realizaciju zadatka.
@@ -151,3 +153,55 @@ U ovom zadatku je dat primjer manipulacije jednim GPIO pinom koji je konfigurisa
 Prilagodite dati `Makefile` tako da omogućite prevođenje i dinamičko linkovanje ovog programa, a zatim korišćenjem `make` alatke prevedite program i prenesite ga na ciljnu platformu slično kao u drugom zadatku.
 
 Nakon kroskompajliranja i prenosa dobijenog izvršnog fajla (pod nazivom `blinking`) na ciljnu platformu u folder `/home/pi/student-name/lab1`, kao što je ranije opisano, trebalo bi da se dobije efekat "žmiganja" na povezanoj LED diodi.
+
+## Korišćenje osciloskopa daljinskim pristupom
+U slučaju kada niste u prilici da radite direktno u laboratoriji, tj. da povežete LED diodu na pin kao što je objašnjeno u trećem zadatku, i na taj način verifikujete ispravnost programa, možete koristiti osciloskop da potvrdite da se na pinu greneriše periodična povorka impulsa. Za to je potrebno instalirati odgovarajuću softversku podršku koja nam omogućava da kontrolišemo osciloskop i da preuzmemo i vizuelizujemo preuzete podatke. Stoga, prvo trebate na razvojnoj platformi preuzeti *Python* skripte sa repozitorijuma https://github.com/smiljanic997/ikm-remote-osc
+
+```
+git clone https://github.com/smiljanic997/ikm-remote-osc
+```
+
+Nakon što smo klonirali ovaj repozitorijum, trebamo da instaliramo sljedeće softverske pakete:
+
+- PIP alat za instalaciju *Python* paketa (`sudo apt-get install python3-pip`),
+- *Paramiko* paket (`sudo pip3 install paramiko`),
+- *Numpy* paket (`sudo apt install python3-numpy`) i
+- *Matplotlib* paket (`sudo apt install python3-matplotlib`).
+
+Po instalaciji pomenutih softverskih paketa, treba da se premjestimo u direktorijum `ikm-remote-osc` i da se prebacimo na granu `client_stable_v1`:
+
+```
+cd ikm-remote-osc
+git checkout client_stable_v1
+```
+
+Sve je spremno za pokretanje skripte koja se preko `ssh` programa povezuje sa *Raspberry Pi* platformom na koju je povezan osciloskop i pokreće odgovarajuće *Python* skripte na platformi kako bi se osciloskop mogao podesiti s ciljem preuzimanja željenih podataka za prikazivanje talasnog oblika koji je izmjeren.
+
+**Napomena:** Skripte neophodne za rad sa osciloskop su preinstalirane na *Raspberry Pi* platformi. Sve navedeno iznad se odnosi isključivo na razvojnu platformu.
+
+Skripta se na razvojnoj mašini pokreće u sljedećem obliku:
+
+```
+python3 read_rpi.py <hostname> <port>
+```
+gdje je `<hostname>` i `<port>` potrebno zamijeniti stvarnim parametrima za pristup koji ste dobili od predmetnog asistenta (npr. `proxy50.rt3.io` i `38567`).
+
+Nakon pokretanja, dobićete pitanje da li želite da zadržite prethodna ili da proslijedite nova podešavanja osciloskopa. Osciloskop se uvijek podešava da radi u EDGE režimu trigerovanja sa SINGLE opcijom zadržavanja mjerenja. Ostali parametri koje možete podešavati su:
+
+- kanal (prvi, drugi ili oba),
+- horizontalna rezolucija (sec/div),
+- vertikalna rezolucija (V/div),
+- vertikalni ofset (V),
+- horizontalni offset (sec),
+- ivica trigerovanja (pozitivna ili negativna) i
+- nivo tigerovanja (V).
+
+Nakon podešavanja parametara osciloskopa, skripta se povezuje sa *Raspberry Pi* platformom (kao potvrdu ispravnog povezivanja dobićete poruku `INFO : Authentication (password) successful!`) i postavlja se u režim mjerenja, nakon čega možete pokrenuti kod koji želite da testirate (poruka `Pokreni C kod`). Da bi pokrenuli kod, potrebno je da se u drugom terminalu povežete sa *Raspberry Pi* platformom pomoću `ssh` programa kao ranije i da pokrenete program koji ste prethodno prenijeli na ciljnu platformu.
+
+Ukoliko je sve kako treba, kada osciloskop detektuje događaj za trigerovanje u skladu sa njegovim podešavanjima, nakon nekoliko sekundi će se pojaviti slika sa izmjerenim talasnim oblikom. Ako ste zadovoljni sa rezultatom, sliku trebate sačuvati (posljednja ikonica u donjem lijevom uglu), jer će inače biti izgubljena. Nakon zatvaranja prozora sa slikom, možete pokrenuti novu sesiju mjerenja.
+
+**Napomena:** Ukoliko nije ispunjen uslov za trigerovanje, skripta će čekati 60 sekundi prije nego što prikaže sliku sa mjerenjima. Ovo je indikator da podešavanja osciloskopa nisu adekvatna, a samim tim ni dobijena mjerenja nisu relevantna. Mjerenje treba ponoviti sa drugačijim podešavanjima osciloskopa. Ukoliko se izvršavanje skripte prekine nasilno (npr. sekvencom `Ctrl+C`), serverska aplikacija ostaje pokrenuta još 60 sekundi, tako da je potrebno sačekati to vrijeme prije nego što se mjerenje ponovi.
+
+Dati kod u trećem zadatku treba prilagoditi tako da se kašnjenje (funkcija `delay()`) podesi da bude umjesto 10, umjesto 500 milisekundi (da bi se skratila dužina trajanja sesije mjerenja). Program ponovo prevesti u skladu sa instrukcijama i prenijeti na ciljnu platformu. Pokrenuti sesiju mjerenja, podesiti parametre osciloskopa tako da se dobije talasni oblik koji čini nekoliko impulsa signala, a zatim na ciljnoj platformi pokrenuti kod kako bi se mjerenje obavilo.
+
+**Napomena:** U datom programskom kodu se mijenja pin BCM 17 (što odgovara pinu 0 u kontekstu numeracije koju koristi biblioteka *wiringPi*) kao što je ranije objašnjeno. U konkretnom slučaju, sonda osciloskopa može biti povezana sa nekim drugim GPIO pinom. Ovo je potrebno provjeriti sa predmetnim asistentom prije mjerenja.
