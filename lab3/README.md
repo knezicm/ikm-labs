@@ -27,7 +27,7 @@ if (fd < 0)
 	fprintf(stderr, "Failed to open serial port. Check if it is used by another device.\n");
 ```
 
-gdje `fd` predstavlja promjenljivu tipa `int` u kojoj se nalazi *file descriptor* fajla koji otvaramo. Ukoliko je ova vrijednost negativna, to znači da je došlo do neke greške pri otvaranju fajla. Prilikom poziva `open()` funkcije, mogu se proslijediti različite opcije kojima se bliže definiše način pristupa fajlu. Tako, na primjer, opcijom `O_RDWR` omogućavamo pristup fajlu sa čitanjem/upisom. Opcijom `O_NOCTTY` se onemogućava da serijski port postane kontrolni terminal procesa koji ga je otvorio, dok opcijom `O_NDELAY` omogućavamo neblokirajući režim rada operacija koje se koriste pri radu sa serijskim portom. Više informacija o ostalim dostupnim opcijama se može pronaći na man stranici [`open()`](http://man7.org/linux/man-pages/man2/open.2.html) sistemskog poziva. Funkcija `frpintf()` je ista kao standardna `printf()` funkcija s tom razlikom da joj se, kao prvi argument, prosljeđuje *file descriptor* fajla u koji se upisuje formatirani string (u konkretnom slučaju, to je `stderr`, tj. *standard error*).
+gdje `fd` predstavlja promjenljivu tipa `int` u kojoj se nalazi *file descriptor* fajla koji otvaramo. Ukoliko je ova vrijednost negativna, to znači da je došlo do neke greške pri otvaranju fajla. Prilikom poziva `open()` funkcije, mogu se proslijediti različite opcije kojima se bliže definiše način pristupa fajlu. Tako, na primjer, opcijom `O_RDWR` omogućavamo pristup fajlu sa čitanjem/upisom. Opcijom `O_NOCTTY` se onemogućava da serijski port postane kontrolni terminal procesa koji ga je otvorio, dok opcijom `O_NDELAY` omogućavamo neblokirajući režim rada operacija koje se koriste pri radu sa serijskim portom. Više informacija o ostalim dostupnim opcijama se može pronaći na man stranici [`open()`](http://man7.org/linux/man-pages/man2/open.2.html) sistemskog poziva. Funkcija `fprintf()` je ista kao standardna `printf()` funkcija s tom razlikom da joj se, kao prvi argument, prosljeđuje *file descriptor* fajla u koji se upisuje formatirani string (u konkretnom slučaju, to je `stderr`, tj. *standard error*).
 
 Podaci se šalju i primaju preko serijskog porta korišćenjem `write()` i `read()` sistemskih poziva. Obje funkcije zahtijevaju da im se proslijedi *file descriptor* otvorenog vrituelnog fajla serijskog porta, pokazivač na bafer u kojem se nalaze podaci koje treba poslati, odnosno u koji će se upisati primljeni podaci i broj bajtova. Funkcija vraća broj uspješno poslatih/primljenih bajtova, odnosno negativnu vrijednost ako se desi greška. Dio koda kojim se razmjenjuju podaci preko serijskog porta (softverska *loopback* veza) ima sljedeći izgled:
 
@@ -124,6 +124,8 @@ Električna šema datog modula, data je na sljedećoj slici (preuzeta sa sljede�
 
 S obzirom da ovaj modul koristi napajanje od 5V i da digitalni ulazi/izlazi koriste očekuju, odnosno daju 5V pri visokom logičkom nivou, direktno spajanje ovog modula sa pinovima na *Raspberry Pi* platformi nije dozvoljeno. Stoga je nephodno **obavezno** koristiti posebno kolo za prilagođavanje napona sa 5V na 3.3V (npr. [3.3V-5V Voltage Translator](https://www.mikroe.com/33v-5v-voltage-translator-board) kompanije Mikroelektronika) ili na neki drugi način zaštiti ulazne pinove *Rasberry Pi* platforme (npr. serijskim vezivanjem otpornika otpornosti koja je veća ili jednaka 2k).
 
+**Napomena:** Kod daljinskog pristupa RS-485 mreži koja je realizovana za potrebe ove vježbe, koriste se specifično razvijene ploče koje se povezuju sa *Raspberry Pi* platformom, a koje na sebi sadrže, između ostalog, i RS-485 transiver koji radi na 3.3V (SN75HVD12). Prema tome, dodatni translator napona se ne koristi u ovom slučaju.
+
 ## Zadaci za samostalnu izradu ##
 
 **Važne napomene:** Zadaci se zbog specifičnosti i ograničenja po pitanju dostupne opreme rade u paru, tj. dva studenta koja sjede jedan pored drugog trebaju zajedno da realizuju zadatak. Izmjene koje je potrebno napraviti u datom izvornom kodu, označene su sa `TODO` u okviru linija sa komentarima.
@@ -148,7 +150,7 @@ U zadatku je potrebno uraditi sljedeće:
 
 U zadatku je potrebno uraditi sljedeće:
 
-1. Povezati dvije *Raspberry Pi* platforme sa datim RS-485 modulima. Predajnu UART liniju (TX) treba povezati sa DI linijom modula, dok prijemnu UART liniju (RX) treba povezati sa RO linijom modula. Liniju za omogućenje predajnika (žica označena sa TE) treba povezati sa pinom BCM22 (WiringPi 3) na konektoru. Važno je napomenuti da je linija za omogućenje prijemnika kratko spojena sa TE linijom na protobordu.
+1. Povezati dvije *Raspberry Pi* platforme sa datim RS-485 modulima. Predajnu UART liniju (TX) treba povezati sa DI linijom modula, dok prijemnu UART liniju (RX) treba povezati sa RO linijom modula. Liniju za omogućenje predajnika (žica označena sa TE) treba povezati sa pinom BCM22 (WiringPi 3) na konektoru. Važno je napomenuti da linija za omogućenje prijemnika treba da bude kratko spojena sa RE linijom na protobordu.
 
 **Napomena:** Sve linije treba da se povežu preko *3.3V-5V Voltage Translator* modula. Posebnu pažnju obratiti na smjer pinova. Modulu za translaciju napona, potrebno je dovesti napon napajanja od 5V.
 
@@ -161,4 +163,6 @@ U zadatku je potrebno uraditi sljedeće:
 4. Na osciloskopu uhvatiti jedan karakter RS-485 komunikacije na diferencijalnim linijama A i B, a zatim potvrditi ispravnost brzine prenosa, prenesenog podatka i pozicija start i stop bita.
 
 5. Analizom talasnog oblika, odrediti vrijednosti napona na diferencijalnim linijama pri slanju logičke nule i logičke jedinice. Takođe, odrediti naponske nivoe na ovim linijama u neaktivnom stanju. Kolike su vrijednosti diferencijalnog i *common-mode* napona za pomenuta tri slučaja?
+
+**Napomena:** U slučaju daljinskog pristupa platformama pri realizaciji vježbe, može se desiti da je teško podesiti odgovarajući nivo za trigerovanje na RS-485 linijama A i B. Iz navedenog razloga, tačke 4 i 5 ne moraju da budu realizovane ako se vježba ne radi u laboratoriji.
 
