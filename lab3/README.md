@@ -109,31 +109,6 @@ Da bi mogli koristiti *termios API*, u zaglavlju fajla je neophodno dodati sljed
 #include <termios.h>
 ```
 
-## wiringPi biblioteka ##
-[*wiringPi*](http://wiringpi.com/) biblioteka omogućava programski pristup *Raspberry Pi* periferijama. U našem slučaju, ovu biblioteku ćemo koristiti kada je potrebno manipulisati digitalnim ulazima i izlazima preko GPIO (*General Purpose Input Output*) kontrolera. Da bi mogli da je koristimo, biblioteku je potrebno preuzeti i kroskompajlirati, a zatim dinamički linkovati sa našim programom.
-
-Najlakši način za preuzimanje izvornog koda *wiringPi* biblioteke je da kloniramo njen repozitorijum sljedećom komandom:
-
-```
-git clone --depth 1 git://git.drogon.net/wiringPi
-```
-
-a zatim je kroskompajliramo tako što pređemo u folder `/path/to/wiringPi/wiringPi` i pokrenemo komandu:
-
-```
-make CC=arm-linux-gnueabihf-gcc
-```
-
-**Napomena:** Dinamička biblioteka dobijena nakon kroskompajliranja osim ekstenzije `.so` sadrži i broj verzije biblioteke, koji treba odstraniti iz naziva fajla kako bi pri kroskompajliranju i dinamičkom linkovanju našeg programa biblioteka bila vidljiva.
-
-Sada se ova biblioteka može koristiti u našim programima. Važno je napomenuti da je fajl dinamičke biblioteke potrebno prebaciti na ciljnu platformu u neki od sistemskih direktorijuma za čuvanje biblioteka (npr. `/usr/lib`). Za pristup ovim folderima, neophodne su administratorske privilegije pa se za prenos koristi komanda:
-
-```
-scp /path/to/wiringPi/lib/libwiringPi.so root@192.168.23.xxx:/usr/lib
-```
-
-gdje `xxx` označava dio IP adrese koji je jedisntven za svaki *Raspberry Pi*.
-
 ## Povezivanje RS-485 mreže ##
 RS-485 je poludupleksna *multipoint* mreža u formi magistrale na koju paralelno može da se poveže do 32 čvora sa jediničnim opterećenjem (*unit load*). Magistrala mora da bude terminisana na oba kraja otpornikom čija je otpornost jedaka karakterističnoj impendansi voda (120 oma u slučaju upredene parice), kako bi se izbjegla refleksija signala.
 
@@ -173,7 +148,7 @@ U zadatku je potrebno uraditi sljedeće:
 
 U zadatku je potrebno uraditi sljedeće:
 
-1. Povezati dvije *Raspberry Pi* platforme sa datim RS-485 modulima. Predajnu UART liniju (TX) treba povezati sa DI linijom modula, dok prijemnu UART liniju (RX) treba povezati sa RO linijom modula. Liniju za omogućenje predajnika (žica označena sa TE) treba povezati sa pinom BCM17 (WiringPi 0) na konektoru. Važno je napomenuti da je linija za omogućenje prijemnika kratko spojena sa TE linijom na protobordu.
+1. Povezati dvije *Raspberry Pi* platforme sa datim RS-485 modulima. Predajnu UART liniju (TX) treba povezati sa DI linijom modula, dok prijemnu UART liniju (RX) treba povezati sa RO linijom modula. Liniju za omogućenje predajnika (žica označena sa TE) treba povezati sa pinom BCM22 (WiringPi 3) na konektoru. Važno je napomenuti da je linija za omogućenje prijemnika kratko spojena sa TE linijom na protobordu.
 
 **Napomena:** Sve linije treba da se povežu preko *3.3V-5V Voltage Translator* modula. Posebnu pažnju obratiti na smjer pinova. Modulu za translaciju napona, potrebno je dovesti napon napajanja od 5V.
 

@@ -17,13 +17,13 @@ int main ()
 		return -1;
 	}
 
-	// setup output mode for BCM17 (WiringPi 0) used to control communication direction
-	// BCM17 (WiringPi 0) = HIGH: RS-485 transmit mode
-	// BCM17 (WiringPi 0) = LOW: RS-485 receive mode
-	pinMode(0, OUTPUT);
+	// setup output mode for BCM22 (WiringPi 3) used to control communication direction
+	// BCM22 (WiringPi 3) = HIGH: RS-485 transmit mode
+	// BCM22 (WiringPi 3) = LOW: RS-485 receive mode
+	pinMode(3, OUTPUT);
 	  
 	// set it initially to be in receive mode
-	digitalWrite(0, LOW);
+	digitalWrite(3, LOW);
 
 	// TODO: open and configure serial port with 9600 baudrate
 
@@ -45,12 +45,12 @@ int main ()
 			// if the entered character is not ENTER
 			if (sbuf != '\n')
 			{
-				digitalWrite(0, HIGH);				// enable RS-485 transmit mode
+				digitalWrite(3, HIGH);				// enable RS-485 transmit mode
 				
 				// TODO: send the entered byte
 				
 				delay(1);							// delay for 1ms
-				digitalWrite(0, LOW);				// disable RS-485 transmit mode
+				digitalWrite(3, LOW);				// disable RS-485 transmit mode
 			}
 		}
 		
