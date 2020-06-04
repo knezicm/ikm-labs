@@ -183,9 +183,9 @@ struct can_frame frame;
 frame.can_id = 0x127;
 frame.can_dlc = 4;
 frame.data[0] = 0xde;
-frame.data[0] = 0xad;
-frame.data[0] = 0xbe;
-frame.data[0] = 0xef;
+frame.data[1] = 0xad;
+frame.data[2] = 0xbe;
+frame.data[3] = 0xef;
 
 write(s, &frame, sizeof(frame));
 ```
