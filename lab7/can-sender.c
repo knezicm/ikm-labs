@@ -4,6 +4,7 @@
 
 #include <sys/ioctl.h>
 #include <sys/socket.h>
+#include <net/if.h>
 
 #include <linux/can.h>
 #include <linux/can/raw.h>
@@ -29,7 +30,7 @@ int main()
 	addr.can_ifindex = ifr.ifr_ifindex;
 	addr.can_family = AF_CAN;
 	
-	/* Disable receive filter on this RAW socket */
+	/* Disable reception filter on this RAW socket */
 	setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, NULL, 0);
 	
 	// TODO: Bind socket to can0 interface

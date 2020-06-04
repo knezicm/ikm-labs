@@ -175,7 +175,7 @@ struct can_frame {
 };
 ```
 
-Kao što može da se vidi, relevantna polja su `can_id`, koje određuje identifikator CAN okvira, `can_dlc`, koje definiše dužinu poruke izraženo brojem bajtova, i niz bajtova `data` u kojem se nalaze sami podaci. Primjer slanja niza bajtova `0xdeadbeef` CAN okvirom čiji je identifikator `0x127` dat je ispod:
+Kao što može da se vidi, relevantna polja su `can_id`, koje određuje identifikator CAN okvira, `can_dlc`, koje definiše dužinu poruke izraženo brojem bajtova, i niz bajtova `data` u kojem se nalaze sami podaci. Primjer slanja niza bajtova 0xdeadbeef CAN okvirom čiji je identifikator 0x127 dat je ispod:
 
 ```
 struct can_frame frame;
@@ -217,7 +217,7 @@ Važno je napomenuti da se u tipičnom scenariju (npr. TCP/IP protokol), prije s
 Po završetku rada sa *SocketCAN* interfejsom, potrebno je pozivom funkcije `close()` osloboditi resurse i zatvoriti prethodno kreirani *socket*.
 
 ```
-socket(s);
+close(s);
 ```
 
 *SocketCAN* aplikacioni interfejs nudi dodatne opcije specifične za CAN protokol, koje se mogu podešavati ili preko `ioctl()` sistemskog poziva ili promjenom opcija za *socket* objekat (funkcija `setsockopt()`). Jedna od najznačajnijih opcija u tom smislu je svakako podešavanje filtra okvira na osnovu CAN identifikatora. Parametri filtra se definišu u okviru specifično definisane strukture podataka:
