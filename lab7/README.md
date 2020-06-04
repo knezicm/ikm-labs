@@ -214,6 +214,12 @@ if (nbytes < sizeof(frame)
 
 Važno je napomenuti da se u tipičnom scenariju (npr. TCP/IP protokol), prije samog slanja podataka, *socket* treba uspostaviti konekciju sa udaljenim čvorom korišćenjem odgovarajuće *handshake* procedure. Međutim, u slučaju *SocketCAN* interfejsa, ovaj korak nije neophodan.
 
+Po završetku rada sa *SocketCAN* interfejsom, potrebno je pozivom funkcije `close()` osloboditi resurse i zatvoriti prethodno kreirani *socket*.
+
+```
+socket(s);
+```
+
 *SocketCAN* aplikacioni interfejs nudi dodatne opcije specifične za CAN protokol, koje se mogu podešavati ili preko `ioctl()` sistemskog poziva ili promjenom opcija za *socket* objekat (funkcija `setsockopt()`). Jedna od najznačajnijih opcija u tom smislu je svakako podešavanje filtra okvira na osnovu CAN identifikatora. Parametri filtra se definišu u okviru specifično definisane strukture podataka:
 
 ```
