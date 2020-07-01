@@ -1,5 +1,18 @@
 # Teme projektnih zadataka #
 
+## 2020 ##
+
+### *Modbus RTU Logger* ###
+U okviru projektnog zadatka, potrebno je realizovati *Modbus RTU Logger*, uređaj za prikupljanje informacija o saobraćaju proizvoljne *Modbus RTU* mreže. Uređaj se priključuje na *Modbus* magistralu preko RS-485 transivera i detektuje *Modbus* okvire. Potrebno je da se realizuju sljedeće funkcionalnosti:
+
+- podržano je prikupljanje saobraćaja isključivo za *Modbus RTU* verziju protokola,
+- detektovani okviri se izlistavaju u konzoli u realnom vremenu i sadrže: trenutak detekcije (*timestamp*), adresu čvora, vrstu okvira (*request/response*), vrstu funkcije, *Modbus* adresu, veličinu i tip podatka, te podatke u heksadecimalnoj notaciji (u obliku sličnom *candump* alatu),
+- neispravni okviri (npr. kod kojih je detektovana greška parnosti) se takođe trebaju logovati uz adekvatnu indikaciju da se radi o neispravnom okviru,
+- prilikom pokretanja programa, potrebno je obezbijediti mogućnost prosljeđivanja UART interfejsa na kojem se prikuplja saobraćaj (npr. `mbdump /dev/ttyAMA0`) i
+- moguće je podesiti filtere za filtriranje saobraćaja po adresi čvora, vrsti okvira i vrsti funkcije.
+
+Realizovani alat za logovanje *Modbus* saobraćaja je potrebno dokumentovati odgovarajućim README fajlom koji sadrži instrukcije o načinu korišćenja alata. Takođe, kao sastavni dio izvještaja, potrebno je priložiti izvještaj o realizovanim aktivnostima sa utrošenim satima po svakom članu tima. Projektni zadatak realizuju tri studenta.
+
 ## 2019 ##
 U okviru projektnog zadatka, potrebno je realizovati *Modbus RTU* mrežu koja se sastoji iz jednog *master* i dva *slave* čvora. Čvorovi se na fizičkom sloju povezuju preko RS-485 infrastrukture. Čvorovi *Master* i *Slave #1* se specifično realizuju, dok se kao *Slave #2* koristi već realizovan uređaj koji posjeduje 4 relejna izlaza.
 
