@@ -1,0 +1,11 @@
+--- openssh/sshd_config	2022-12-22 23:02:42.551236116 +0100
++++ openssh/sshd_config	2022-12-22 23:01:22.487495149 +0100
+@@ -29,7 +29,7 @@
+ # Authentication:
+ 
+ #LoginGraceTime 2m
+-#PermitRootLogin prohibit-password
++PermitRootLogin yes
+ #StrictModes yes
+ #MaxAuthTries 6
+ #MaxSessions 10

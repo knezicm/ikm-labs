@@ -1,0 +1,89 @@
+==============================================================================================================
+- - - - - - - - - - - - - - - -	- - - - - - - - meta-ikm - - - - - - - - - - - - - - - - - - - - - - - - - - -
+==============================================================================================================
+
+This README file contains information on the contents of the meta-ikm layer.
+
+Student:   Aleksandar Simonovic <simonovic.aleksandar@hotmail.com>
+Professor: Mladen Knezic        <mladen.knezic@etf.unibl.org>
+
+Please see the corresponding sections below for details.
+
+==============================================================================================================
+## Description
+==============================================================================================================
+
+This layer adds specific modifications to RaspberryPi3 device to support the needs of course 
+"Industrijske Komunikacione Mreze" held at Faculty of Electrical Engineering, University of Banja Luka.
+
+Information about the faculty can be found at: <https://etf.unibl.org/>
+Information about the course can be found at:  <https://github.com/knezicm/ikm-labs/>
+
+This layer adds following list of features:
+
+* Creation of user accounts
+* Modification of password for the root user
+* Setting static IP address
+* SSH server installation
+* Support for CAN protocol via can-utils        <https://github.com/linux-can/can-utils>
+* Support for Modbus protocol via libmodbus     <https://github.com/dhruvvyas90/libmodbus>
+* Support for LIN protocol via linux-lin 	<https://github.com/lin-bus/linux-lin/>
+* Support for CANopen protocol via CANopenNode  <https://github.com/CANopenNode/CANopenLinux>
+
+==============================================================================================================
+## Dependencies
+==============================================================================================================
+
+This layer depends on:
+
+* URI: git://git.yoctoproject.org/poky
+  * branch: kirkstone
+  
+* URI: git://git.yoctoproject.org/meta-raspberrypi
+  * branch: kirkstone
+  
+==============================================================================================================
+## Quick Start
+==============================================================================================================
+
+Before starting be sure to prepare host machine for use with Yocto Project (https://docs.yoctoproject.org/4.0.5/singleindex.html#document-brief-yoctoprojectqs/index)
+
+01. Clone poky		         				- git clone git://git.yoctoproject.org/poky
+02. Checkout poky to kirkstone branch 				- git checkout kirkstone
+03. Source the init script 					- source poky/oe-init-build-env rpi-build
+04. Clone meta-raspberrypi BSP layer				- git clone git://git.yoctoproject.org/meta-raspberrypi
+05. Add BSP layer to build 					- bitbake-layers add-layer ../meta-raspberrypi
+06. Checkout meta-raspberry to kirkstone branch 		- git checkout kirkstone
+07. Add meta-ikm layer to build					- bitbake-layers add-layer ../meta-ikm
+08. Set following variables in local.conf:
+	MACHINE = "raspberrypi3-ikm"
+	DISTRO = "ikm"
+09. Generate image 						- bitbake ikm-image
+10. After build is complete position move to output directory   - cd build/tmp/deploy/images/raspberrypi3-ikm
+11. Decompress generated image file				- bzip2 -dkf ikm-image-raspberrypi3-ikm-YOUR_TIME_STAMP.rootfs.wic.bz2
+12. Identify file associated with SD card			- lsblk (find the name of the SD card - for me it is /dev/sdb)
+13. Detach SD card file hierarchy				- sudo umount /dev/sdb*
+14. Delete all partitions 					- sudo fdisk /dev/sdb -> d -> 1 -> d - > w
+15. Flash the SD card						- sudo dd if=ikm-image-raspberrypi3-ikm-YOUR_TIME_STAMP.rootfs.wic of=/dev/sdb bs=4096 && sync
+16. Boot your Raspberry Pi 3
+
+==============================================================================================================
+## Customizations
+==============================================================================================================
+
+1. To set desired static IP address modify contents of the file meta-ikm/recipes-core/systemd/files/10-eth0.network
+	
+2. To add new users modify contents of the file meta-ikm/recipes-ikm/images/include/user-configuration.inc
+
+==============================================================================================================
+## Patches
+==============================================================================================================
+
+Please submit any patches against the meta-ikm layer to the mailing list <simonovic.aleksandar@hotmail.com>
+
+Maintainer: Aleksandar Simonovic <simonovic.aleksandar@hotmail.com>
+
+==============================================================================================================
+- - - - - - - - - - - - - - - -	- - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+==============================================================================================================
+
