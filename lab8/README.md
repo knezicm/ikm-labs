@@ -1,7 +1,7 @@
 # Laboratorijska vježba 8: CANopen protokol #
 
-## Instalacija i rad sa *CANopenSocket* implementacijom
+## Instalacija i rad sa *CANopenLinux* implementacijom
 
-*CANopenSocket* predstavlja *CANopenNode* implementaciju *CANopen* protokola na *Linux* platformi. Informacije vezane za instalaciju i konfiguraciju projekta, kao i osnovno uputstvo za korisćenje datih resursa, dato je na sjedećem linku:
+*CANopenLinux* predstavlja *CANopenNode* implementaciju *CANopen* protokola na *Linux* platformi. Informacije vezane za instalaciju i konfiguraciju projekta, kao i osnovno uputstvo za korišćenje datih resursa, dato je na sljedećem linku:
 
-https://github.com/CANopenNode/CANopenSocket
+[https://github.com/CANopenNode/CANopenSocket](https://github.com/CANopenNode/CANopenLinux)
