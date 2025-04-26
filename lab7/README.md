@@ -57,6 +57,7 @@ i unijeti sljedeće linije
 
 ```
 dtparam=spi=on
+dtoverlay=spi1-3cs
 dtoverlay=mcp2515-can2,oscillator=10000000,spimaxfrequency=1000000,interrupt=25
 ```
 
@@ -64,6 +65,7 @@ ako se radi o verziji *Linux* kernela >= 4.4.x, odnosno
 
 ```
 dtparam=spi=on
+dtoverlay=spi1-3cs
 dtoverlay=mcp2515-can2-overlay,oscillator=10000000,spimaxfrequency=1000000,interrupt=25
 dtoverlay=spi-bcm2835-overlay
 ```
