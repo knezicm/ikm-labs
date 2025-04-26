@@ -4,4 +4,4 @@
 
 *CANopenLinux* predstavlja *CANopenNode* implementaciju *CANopen* protokola na *Linux* platformi. Informacije vezane za instalaciju i konfiguraciju projekta, kao i osnovno uputstvo za korišćenje datih resursa, dato je na sljedećem linku:
 
-[https://github.com/CANopenNode/CANopenSocket](https://github.com/CANopenNode/CANopenLinux)
+[https://github.com/CANopenNode/CANopenLinux](https://github.com/CANopenNode/CANopenLinux)
