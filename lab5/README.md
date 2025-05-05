@@ -49,7 +49,7 @@ make
 make install
 ```
 
-Važno je napomenuti da opcija `--prefix` definiše lokaciju na koju će se instalirati binarna verzija biblioteke komandom `make install` (u konkretnom slučaju `/path/to/usr` treba zamijeniti apsolutnom putanjom prethodno kreiranog `usr` foldera), dok  opcijom `--host` definišemo arhitekturu za koju se biblioteka kompajlira (u našem slučaju, to je ARM arhitektura).
+Važno je napomenuti da opcija `--prefix` definiše lokaciju na koju će se instalirati binarna verzija biblioteke komandom `make install` (u konkretnom slučaju `/path/to/usr` treba zamijeniti apsolutnom putanjom prethodno kreiranog `usr` foldera), dok  opcijom `--host` definišemo arhitekturu za koju se biblioteka kompajlira (u našem slučaju, to je ARM arhitektura). Opcija `--disable-tests` isključuje kompajliranje testova koji u našem slučaju nisu potrebni.
 
 Kao rezultat, u okviru `usr` foldera dobijamo binarnu verziju biblioteke, kao i *header* fajlove neophodne za kroskompajliranje aplikacije koja poziva API funkcije *libmodbus* biblioteke. Studentu se preporučuje da izdvoji određeno vrijeme tokom vježbe i upozna se sa strukturom `usr` foldera i identifikuje lokacije dinamičke biblioteke i pomenutih *header* fajlovam jer su ove informacije esencijalne za ispravno kroskompajliranje aplikacije.
 
@@ -61,6 +61,9 @@ Nakon što je biblioteka kroskompajlirana, može se pristupiti realizaciji aplik
 |[`modbus_free()`](https://libmodbus.org/reference/modbus_free)|Oslobađa resurse *libmodbus* konteksta|
 |[`modbus_set_debug()`](https://libmodbus.org/reference/modbus_set_debug)|Uključuje/isključuje mod za debagovanje|
 |[`modbus_set_slave()`](https://libmodbus.org/reference/modbus_set_slave)|Postavlja identifikator *slave* uređaja u *libmodbus* kontekstu|
+|[`modbus_rtu_set_rts()`](https://libmodbus.org/reference/modbus_rtu_set_rts)|Omogućava RTS režim rada|
+|[`modbus_rtu_set_rts_delay()`](https://libmodbus.org/reference/modbus_rtu_set_rts_delay)|Postavlja kašnjenje između aktivacije RTS signala i slanja okvira u RTS režimu rada|
+|[`modbus_rtu_set_custom_rts()`](https://libmodbus.org/reference/modbus_rtu_set_custom_rts)|Definiše korisničku funkciju za manipulaciju GPIO pinom za kontrolu RS-485 primopredajnika u RTS režimu|
 |[`modbus_connect()`](https://libmodbus.org/reference/modbus_connect)|Uspostavlja Modbus vezu|
 |[`modbus_close()`](https://libmodbus.org/reference/modbus_close)|Raskida Modbus vezu|
 |[`modbus_read_bits()`](https://libmodbus.org/reference/modbus_read_bits)|Čita stanje više izlaznih bita (FC=0x01)|
