@@ -18,12 +18,11 @@ Prije početka vježbe, student treba da ažurira stanje lokalnog repozitorijuma
 ## Programski interfejs *libmodbus* biblioteke ##
 Bibilioteka *libmodbus* predstavlja implementaciju različitih varijanti Modbus protokola za različite platforme u C programskom jeziku. Bibilioteka obezbjeđuje odgovarajući API, koji omogućava uspostavljanje komunikacije, podešavanje parametara, te razmjenu podataka. Iako je podržana funkcionalnost *master* i *slave* čvora, u okviru vježbe će se koristiti samo *master* (*client*) režim rada, koji omogućava prozivanje dostupnog *slave* uređaja. Više informacija o samoj biblioteci, student može pronaći na zvaničnoj web stranici [*libmodbus* biblioteke](https://libmodbus.org/).
 
-U konkretnom slučaju, koristi se verzija *libmodbus* biblioteke prilagođena *Raspberry Pi* platformi. U vježbi je potrebno preuzeti repozitorijum biblioteke, a zatim kroskompajlirati dati izvorni kod za datu platformu.
-
 Prvi korak je kloniranje izvornog koda biblioteke sa repozitorijuma. U tu svrhu, koristimo sljedeću komandu:
 
 ```
-git clone --depth=1 https://github.com/dhruvvyas90/libmodbus
+git clone https://github.com/stephane/libmodbus.git
+git checkout v3.1.11
 ```
 
 Prethodnu komandu treba izvršiti u okviru radnog direktorijuma laboratorijske vježbe (`lab5`).
@@ -45,7 +44,7 @@ Nakon toga, prelazimo u folder u kojem se nalazi repozitorijum *libmodbus* bibli
 ```
 cd libmodbus
 ./autogen.sh
-./configure ac_cv_func_malloc_0_nonnull=yes --prefix=/path/to/usr --host=arm-linux-gnueabihf
+./configure ac_cv_func_malloc_0_nonnull=yes --prefix=/path/to/usr --host=arm-linux-gnueabihf --disable-tests
 make
 make install
 ```
