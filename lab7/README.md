@@ -88,9 +88,9 @@ pri čemu je u drugoj liniji prikazan tipičan ispis nakon izvršavanja komande 
 Nakon što je prethodnom provjerom potvrđeno da je CAN kontroler uspješno inicijalizovan, sljedeći korak podrazumijeva aktiviranje CAN interefejsa. Ovo se postiže istim komandama kao kada se radi sa klasičnim mrežnim interfejsima.
 
 ```sh
-sudo ip link set can0 up type can bitrate 125000	# enable interface
-ip link show dev can0						    	# print info
-sudo ip link set can0 down      					# disable interface
+sudo ip link set can0 up type can bitrate 125000    # enable interface
+ip link show dev can0                               # print info
+sudo ip link set can0 down                          # disable interface
 ```
 
 **Napomena:** Važno je definisati tip interfejsa (`type can` segment komande), te podesiti bitsku brzinu CAN mreže (parametar `bitrate`).
