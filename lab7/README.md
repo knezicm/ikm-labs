@@ -18,7 +18,7 @@ Prije početka vježbe, student treba da ažurira stanje lokalnog repozitorijuma
 
 Prvi korak je kloniranje izvornog koda projekta sa repozitorijuma. U tu svrhu, koristimo sljedeću komandu:
 
-```
+```sh
 git clone --depth=1 https://github.com/linux-can/can-utils.git
 ```
 
@@ -26,13 +26,13 @@ Prethodnu komandu treba izvršiti u okviru radnog direktorijuma laboratorijske v
 
 Sljedeći korak je kroskompajliranje biblioteke. Kroskompajliranje ćemo obaviti na sličan način kao što smo to radili u slučaju *libmodbus* biblioteke, jer se i u ovom projektu koriste alati za automatizovano kompajliranje projekata. Prvo je potrebno napraviti folder (npr. folder `usr` u radnom direktorijumu laboratorijske vježbe) u kojem će se nalaziti prekompajliranja (binarna) verzija biblioteke sa kojom će se kasnije dinamički linkovati izvršni fajl aplikacije.
 
-```
+```sh
 mkdir usr
 ```
 
 Nakon toga, prelazimo u folder u kojem se nalazi repozitorijum *can-utils* projekta i pokrećemo niz komandi za konfiguraciju *build* sistema i kompajliranje projekta.
 
-```
+```sh
 cd can-utils
 ./autogen.sh
 ./configure --prefix=/path/to/usr --host=arm-linux-gnueabihf
@@ -49,7 +49,7 @@ Da bi mogao da se koristi CAN interefejs na *Raspberry Pi* platformi, neophodno 
 
 Za MCP2515 CAN kontroler već postoji podrška u *Linux* operativnom sistemu u vidu drajverskog modula. Da bi se ovaj modul učitao prilikom podizanja sistema na *Raspberry Pi* platformi, potrebno je promijeniti strukturu hardvera sistema definisanjem odgovarajućih parametara u okviru `/boot/config.txt` fajla. U tom smislu, ovaj fajl treba editovati komandom
 
-```
+```sh
 sudo nano /boot/config.txt
 ```
 
@@ -76,7 +76,7 @@ za starije verzije *Linux* kernela.
 
 Kada su napravljene opisane izmjene, platformu treba restartovati komandom `sudo reboot`, a nakon što je platforma ponovo pokrenuta, provjeriti da li je MCP2515 CAN kontroler uspješno inicijalizovan. U tu svrhu, može se koristiti komanda
 
-```
+```sh
 dmesg | grep can
 [    4.112571] mcp251x spi0.0 can0: MCP2515 successfully initialized.
 ```
@@ -87,7 +87,7 @@ pri čemu je u drugoj liniji prikazan tipičan ispis nakon izvršavanja komande 
 
 Nakon što je prethodnom provjerom potvrđeno da je CAN kontroler uspješno inicijalizovan, sljedeći korak podrazumijeva aktiviranje CAN interefejsa. Ovo se postiže istim komandama kao kada se radi sa klasičnim mrežnim interfejsima.
 
-```
+```sh
 sudo ip link set can0 up type can bitrate 125000	# enable interface
 ip link show dev can0						    	# print info
 sudo ip link set can0 down      					# disable interface
@@ -97,7 +97,7 @@ sudo ip link set can0 down      					# disable interface
 
 Status interfejsa se dodatno može potvrditi komandom
 
-```
+```sh
 dmesg | grep can
 [    4.112571] mcp251x spi0.0 can0: MCP2515 successfully initialized.
 [  244.793998] IPv6: ADDRCONF(NETDEV_CHANGE): can0: link becomes ready
@@ -107,7 +107,7 @@ gdje dvije posljednje linije daju tipičan ispis komadne kada je interfejs uspje
 
 Konačno, CAN mreža se može testirati, tako što se CAN_H i CAN_L linije *CAN SPI click* modula, odnosno dodatne pločice, povežu sa CAN_H i CAN_L linijama drugog dostupnog modula i na *Raspberry Pi* platformi pokrenu komande:
 
-```
+```sh
 cansend can0 127#DEADBEEF
 candump can0 (pokreće se u drugom terminalu)
 ```
@@ -124,34 +124,34 @@ Za potrebe CAN infrastrukture, realizovan je poseban *SocketCAN* aplikacioni int
 
 Prvi korak pri radu sa *BSD Sockets* aplikacionim interfejsom je kreiranje samog *socket* objekta:
 
-```
+```c
 s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 ```
 
 Nakon toga, neophodno je da se *socket* poveže sa mrežnim interfejsom (u našem slučaju to je CAN mrežni interfejs), kako bi znao kome se podaci šalju.
 
-```
+```c
 bind(s, (struct sockaddr *)&addr, sizeof(addr));
 ```
 
 Kod povezivanja, jasno je da je neophodno na odgovarajući način popuniti polja `struct sockaddr` strukture podataka da bi povezivanje bilo uspješno. Ova struktura ima sljedeći izgled:
 
-```
+```c
 struct sockaddr_can {
-		sa_family_t can_family;
-		int         can_ifindex;
-		union {
-				/* transport protocol class address info (e.g. ISOTP) */
-				struct { canid_t rx_id, tx_id; } tp;
+    sa_family_t can_family;
+    int         can_ifindex;
+    union {
+        /* transport protocol class address info (e.g. ISOTP) */
+        struct { canid_t rx_id, tx_id; } tp;
 
-				/* reserved for future CAN protocols address information */
-		} can_addr;
+        /* reserved for future CAN protocols address information */
+} can_addr;
 };
 ```
 
 Za osnovu manipulaciju CAN okvirima, dovoljno je podesiti polja `can_family` i `can_ifindex`. Prvo polje se tipično podešava da bude `AF_CAN`, dok je za drugo neophodno pribaviti indeks na osnovu naziva mrežnog interfejsa. Ovo se može obaviti `ioctl()` sistemskim pozivom na sljedeći način:
 
-```
+```c
 int s;
 struct sockaddr_can addr;
 struct ifreq ifr;
@@ -166,20 +166,20 @@ addr.can_ifindex = ifr.ifr_ifindex;
 
 Konačno, korišćenjem standardnih sistemskih poziva `write()` i `read()`, možemo da šaljemo i primamo podatke preko ovog mrežnog interfejsa. Prije samog slanja, potrebno je da se popune polja strukture podataka `struct can_frame` koja sadrže informacije o strukturi CAN okvira koji šaljemo. Sama struktura ima sljedeći izgled:
 
-```
+```c
 struct can_frame {
-		canid_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
-		__u8    can_dlc; /* frame payload length in byte (0 .. 8) */
-		__u8    __pad;   /* padding */
-		__u8    __res0;  /* reserved / padding */
-		__u8    __res1;  /* reserved / padding */
-		__u8    data[8] __attribute__((aligned(8)));
+    canid_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
+    __u8    can_dlc; /* frame payload length in byte (0 .. 8) */
+    __u8    __pad;   /* padding */
+    __u8    __res0;  /* reserved / padding */
+    __u8    __res1;  /* reserved / padding */
+    __u8    data[8] __attribute__((aligned(8)));
 };
 ```
 
 Kao što može da se vidi, relevantna polja su `can_id`, koje određuje identifikator CAN okvira, `can_dlc`, koje definiše dužinu poruke izraženo brojem bajtova, i niz bajtova `data` u kojem se nalaze sami podaci. Primjer slanja niza bajtova 0xdeadbeef CAN okvirom čiji je identifikator 0x127 dat je ispod:
 
-```
+```c
 struct can_frame frame;
 ...
 frame.can_id = 0x127;
@@ -194,7 +194,7 @@ write(s, &frame, sizeof(frame));
 
 Na ekvivalentan način, možemo da primimo podatke:
 
-```
+```c
 struct can_frame frame;
 int nbytes;
 ...
@@ -202,15 +202,15 @@ nbytes = read(s, &frame, sizeof(frame));
 
 if (nbytes < 0)
 {
-	fprintf(stderr, "can raw socket read failed\n");
-	return 1;
+    fprintf(stderr, "can raw socket read failed\n");
+    return 1;
 }
 
 /* additional check */
 if (nbytes < sizeof(frame)
 {
-	fprintf(stderr, "read: incomplete CAN frame\n");
-	return 1;
+    fprintf(stderr, "read: incomplete CAN frame\n");
+    return 1;
 }
 ```
 
@@ -218,16 +218,16 @@ Važno je napomenuti da se u tipičnom scenariju (npr. TCP/IP protokol), prije s
 
 Po završetku rada sa *SocketCAN* interfejsom, potrebno je pozivom funkcije `close()` osloboditi resurse i zatvoriti prethodno kreirani *socket*.
 
-```
+```c
 close(s);
 ```
 
 *SocketCAN* aplikacioni interfejs nudi dodatne opcije specifične za CAN protokol, koje se mogu podešavati ili preko `ioctl()` sistemskog poziva ili promjenom opcija za *socket* objekat (funkcija `setsockopt()`). Jedna od najznačajnijih opcija u tom smislu je svakako podešavanje filtra okvira na osnovu CAN identifikatora. Parametri filtra se definišu u okviru specifično definisane strukture podataka:
 
-```
+```c
 struct can_filter {
-		canid_t can_id;
-		canid_t can_mask;
+    canid_t can_id;
+    canid_t can_mask;
 };
 ```
 
@@ -239,7 +239,7 @@ u kojoj polje `can_id` definiše bite identifikatora koji želimo da prihvatimo,
 
 Jedan primjer podešavanja filtra poruka je dat ispod:
 
-```
+```c
 struct can_filter rfilter[2];
 ...
 rfilter[0].can_id   = 0x123;
@@ -254,7 +254,7 @@ U primjeru iznad, omogućen je prijem CAN okvira čiji je identifikator jednak 0
 
 Ako želimo da onemogućimo prijem CAN okvira na nekom mrežnom interfejsu, koristićemo sljedeću varijantu filtra:
 
-```
+```c
 setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, NULL, 0);
 ```
 
