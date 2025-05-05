@@ -58,21 +58,21 @@ Nakon što je biblioteka kroskompajlirana, može se pristupiti realizaciji aplik
 
 |Funkcija|Opis|
 |--------|----|
-|[`modbus_new_rtu()`](https://libmodbus.org/docs/v3.0.6/modbus_new_rtu.html)|Kreira novi *libmodbus* kontekst za RTU tip protokola|
-|[`modbus_free()`](https://libmodbus.org/docs/v3.0.6/modbus_free.html)|Oslobađa resurse *libmodbus* konteksta|
-|[`modbus_set_debug()`](https://libmodbus.org/docs/v3.0.6/modbus_set_debug.html)|Uključuje/isključuje mod za debagovanje|
-|[`modbus_set_slave()`](https://libmodbus.org/docs/v3.0.6/modbus_set_slave.html)|Postavlja identifikator *slave* uređaja u *libmodbus* kontekstu|
-|[`modbus_connect()`](https://libmodbus.org/docs/v3.0.6/modbus_connect.html)|Uspostavlja Modbus vezu|
-|[`modbus_close()`](https://libmodbus.org/docs/v3.0.6/modbus_close.html)|Raskida Modbus vezu|
-|[`modbus_read_bits()`](https://libmodbus.org/docs/v3.0.6/modbus_read_bits.html)|Čita stanje više izlaznih bita (FC=0x01)|
-|[`modbus_read_input_bits()`](https://libmodbus.org/docs/v3.0.6/modbus_read_input_bits.html)|Čita stanje više ulaznih bita (FC=0x02)|
-|[`modbus_read_registers()`](https://libmodbus.org/docs/v3.0.6/modbus_read_registers.html)|Čita stanje više izlaznih registara (FC=0x03)|
-|[`modbus_read_input_registers()`](https://libmodbus.org/docs/v3.0.6/modbus_read_input_registers.html)|Čita stanje više ulaznih registara (FC=0x04)|
-|[`modbus_write_bit()`](https://libmodbus.org/docs/v3.0.6/modbus_write_bit.html)|Definiše stanje izlaznog bita (FC=0x05)|
-|[`modbus_write_register()`](https://libmodbus.org/docs/v3.0.6/modbus_write_register.html)|Upisuje vrijednost u izlazni registar (FC=0x06)|
-|[`modbus_write_bits()`](https://libmodbus.org/docs/v3.0.6/modbus_write_bits.html)|Definiše stanje više izlaznih bita (FC=0x0F)|
-|[`modbus_write_registers()`](https://libmodbus.org/docs/v3.0.6/modbus_write_registers.html)|Upisuje vrijednosti u više izlaznih registara (FC=0x10)|
-|[`modbus_write_and_read_registers()`](https://libmodbus.org/docs/v3.0.6/modbus_write_and_read_registers.html)|Upisuje vrijednosti u više izlaznih registara, a zatim čita stanje više izlaznih registara (FC=0x17)|
+|[`modbus_new_rtu()`](https://libmodbus.org/reference/modbus_new_rtu)|Kreira novi *libmodbus* kontekst za RTU tip protokola|
+|[`modbus_free()`](https://libmodbus.org/reference/modbus_free)|Oslobađa resurse *libmodbus* konteksta|
+|[`modbus_set_debug()`](https://libmodbus.org/reference/modbus_set_debug)|Uključuje/isključuje mod za debagovanje|
+|[`modbus_set_slave()`](https://libmodbus.org/reference/modbus_set_slave)|Postavlja identifikator *slave* uređaja u *libmodbus* kontekstu|
+|[`modbus_connect()`](https://libmodbus.org/reference/modbus_connect)|Uspostavlja Modbus vezu|
+|[`modbus_close()`](https://libmodbus.org/reference/modbus_close)|Raskida Modbus vezu|
+|[`modbus_read_bits()`](https://libmodbus.org/reference/modbus_read_bits)|Čita stanje više izlaznih bita (FC=0x01)|
+|[`modbus_read_input_bits()`](https://libmodbus.org/reference/modbus_read_input_bits)|Čita stanje više ulaznih bita (FC=0x02)|
+|[`modbus_read_registers()`](https://libmodbus.org/reference/modbus_read_registers)|Čita stanje više izlaznih registara (FC=0x03)|
+|[`modbus_read_input_registers()`](https://libmodbus.org/reference/modbus_read_input_registers)|Čita stanje više ulaznih registara (FC=0x04)|
+|[`modbus_write_bit()`](https://libmodbus.org/reference/modbus_write_bit)|Definiše stanje izlaznog bita (FC=0x05)|
+|[`modbus_write_register()`](https://libmodbus.org/reference/modbus_write_register)|Upisuje vrijednost u izlazni registar (FC=0x06)|
+|[`modbus_write_bits()`](https://libmodbus.org/reference/modbus_write_bits)|Definiše stanje više izlaznih bita (FC=0x0F)|
+|[`modbus_write_registers()`](https://libmodbus.org/reference/modbus_write_registers)|Upisuje vrijednosti u više izlaznih registara (FC=0x10)|
+|[`modbus_write_and_read_registers()`](https://libmodbus.org/reference/modbus_write_and_read_registers)|Upisuje vrijednosti u više izlaznih registara, a zatim čita stanje više izlaznih registara (FC=0x17)|
 
 Osnovna aplikacija sadrži sljedeće elemente. Prvo je potrebno deklarisati pokazivač na specifičnu Modbus strukturu pod nazivom *Modbus kontekst* (`modbus_t *ctx`), koja definiše parametre Modbus protokola. Nakon toga, pozivom funkcije `modbus_new_rtu()` kontekst Modbus protokola se inicijalizuje odgovarajućim parametrima.
 
