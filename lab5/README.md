@@ -20,7 +20,7 @@ Bibilioteka *libmodbus* predstavlja implementaciju različitih varijanti Modbus 
 
 Prvi korak je kloniranje izvornog koda biblioteke sa repozitorijuma. U tu svrhu, koristimo sljedeću komandu:
 
-```
+```sh
 git clone https://github.com/stephane/libmodbus.git
 git checkout v3.1.11
 ```
@@ -29,19 +29,19 @@ Prethodnu komandu treba izvršiti u okviru radnog direktorijuma laboratorijske v
 
 S obzirom da biblioteka koristi programsku podršku za automatizovano kompajliranje projekta (tzv. `automake` *build system*), neophodno je provjeriti da li su na razvojnoj platformi instalirani odgovarajući softverski paketi (u konkretnom slučaju, `automake`, `autoconf` i `libtool`). To se postiže komandom `dpkg -l {packages_list}`. Instalacija pomenutih softverskih paketa, u *Ubuntu* distribuciji, obavlja se standardnom `apt-get` komandom:
 
-```
+```sh
 sudo apt-get install -y automake autoconf libtool
 ```
 
 Nakon što je sistem pripremljen, sljedeći korak je kroskompajliranje biblioteke. Prvo je potrebno napraviti folder (npr. folder `usr` u radnom direktorijumu laboratorijske vježbe) u kojem će se nalaziti prekompajliranja (binarna) verzija biblioteke sa kojom će se kasnije dinamički linkovati izvršni fajl aplikacije.
 
-```
+```sh
 mkdir usr
 ```
 
 Nakon toga, prelazimo u folder u kojem se nalazi repozitorijum *libmodbus* biblioteke i pokrećemo niz komandi za konfiguraciju *build* sistema i kompajliranje projekta.
 
-```
+```sh
 cd libmodbus
 ./autogen.sh
 ./configure ac_cv_func_malloc_0_nonnull=yes --prefix=/path/to/usr --host=arm-linux-gnueabihf --disable-tests
@@ -75,7 +75,7 @@ Nakon što je biblioteka kroskompajlirana, može se pristupiti realizaciji aplik
 
 Osnovna aplikacija sadrži sljedeće elemente. Prvo je potrebno deklarisati pokazivač na specifičnu Modbus strukturu pod nazivom *Modbus kontekst* (`modbus_t *ctx`), koja definiše parametre Modbus protokola. Nakon toga, pozivom funkcije `modbus_new_rtu()` kontekst Modbus protokola se inicijalizuje odgovarajućim parametrima.
 
-```
+```c
 modbus_t *ctx;
 ...
 ctx = modbus_new_rtu("/dev/ttyAMA0", 19200, 'N', 8, 1);
@@ -92,7 +92,7 @@ Opciono, možemo omogućiti prikazivanje *debug* informacija (funkcija `modbus_s
 
 Konačno, nakon povezivanja na Modbus mrežu (funkcija `modbus_connect()`), mogu se razmjenjivati poruke sa definisanim uređajem korišćenjem datih funkcija. Po završetku, potrebno je raskinuti vezu i osloboditi resurse.
 
-```
+```c
 if (modbus_connect(ctx) == -1) {
 	fprintf(stderr, "Connection failed.\n");
 	modbus_free(ctx);
@@ -105,21 +105,43 @@ modbus_close(ctx);
 modbus_free(ctx);
 ```
 
-S obzirom da je data biblioteka prilagođena za izvršavanje na *Raspberry Pi* platformi, pri čemu je obezbjeđena kontrola smjera prenosa RS-485 transivera pomoću proizvoljno odabranog GPIO pina, potrebno je prije uspostavljanja i nakon raskidanja veze sa Modbus mrežom, pozvati odgovarajuće funkcije kojima se definiše koji GPIO pin je zadužen za kontrolu smjera RS-485 transivera.
+Bibilioteka *libmodbus* interno omogućava kontrolu smjera prenosa RS-485 transivera korišćenjem RTS signala (pin GPIO17 na *Raspberry Pi* platformi za UART0), koja se omogućuje pozivom funkcije `modbus_rtu_set_rts()`. Ovu funkciju je potrebno pozvati prije uspostavljanja veze sa Modbus mrežom.
 
-```
-modbus_enable_rpi(ctx, TRUE);
-modbus_configure_rpi_bcm_pin(ctx, BCM_PIN_DE);
-modbus_rpi_pin_export_direction(ctx);
+```c
+modbus_rtu_set_rts(ctx, MODBUS_RTU_RTS_UP);
 // Do some communication over Modbus
 ...
-// On closing the connection
-modbus_rpi_pin_unexport_direction(ctx);
+```
+
+Opciono, možemo i da definišemo kašnjenje prije i nakon postavljanja RTS pina pomoću funkcije `modbus_rtu_set_rts_delay()`, ukoliko je to neophodno.
+
+S obzirom da je RTS pin fiksiran na GPIO17, *libmodbus* omogućava da definišemo svoju funkciju u kojoj onda možemo da upravljamo stanjem proizvoljnog GPIO pina, npr. korišćenjem *WiringPi* ili *libgpiod* biblioteke (odnosno, na bilo koji način koji nam omogućava *Linux*) infrastruktura. Ova funkcija se poziva odmah nakon definisanja načina rada u RTS režimu.
+
+```c
+// Define custom user function
+void custom_set_rts(modbus_t *ctx, int on)
+{
+    if (on)
+    {
+        // Assert the GPIO pin which controls DE on transceiver
+        ...
+    }
+    else
+    {
+        // Deassert the GPIO pin which controls DE on transceiver
+        ...
+    }
+}
+...
+modbus_rtu_set_rts(ctx, MODBUS_RTU_RTS_UP);
+modbus_rtu_set_custom_rts(ctx, custom_set_rts);
+// Do some communication over Modbus
+...
 ```
 
 Da bi koristili prethodno opisane funkcije, potrebno je uključiti odgovarajuće sistemske *header* fajlove u kojima su definisani njihovi prototipi. S tim u vezi, na početku programa, treba da se nalaze sljedeće direktive:
 
-```
+```c
 #include <stdio.h>
 #include <unistd.h>
 #include <modbus.h>
