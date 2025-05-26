@@ -1,0 +1,26 @@
+# 1. Load vcan module
+sudo modprobe vcan
+
+# 2. Confirm that vcan module is loaded
+lsmod | grep vcan
+
+# You should get something like this
+vcan                   12288  0
+can_dev                40960  1 vcan
+
+# 3. Initialize the vcan interface
+sudo ip link add dev vcan0 type vcan
+sudo ip link set vcan0 mtu 16
+sudo ip link set up vcan0
+
+# 4. Confirm that vcan0 interface is up and running
+ifconfig vcan0
+
+# You should get something like this
+vcan0: flags=193<UP,RUNNING,NOARP>  mtu 16
+        unspec 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  txqueuelen 1000  (UNSPEC)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
