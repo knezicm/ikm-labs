@@ -118,17 +118,17 @@ Na fizičkom sloju RS-485 mreže, koriste se komponente pod nazivom transiveri (
 
 Izgled prve ploče, kao i njena električna šema dati su na slikama ispod.
 
-<img width="1120" height="900" alt="image" src="https://github.com/user-attachments/assets/19434e71-11ee-430b-a6a5-04715a16de4d" />
+<img width="373" height="300" alt="image" src="https://github.com/user-attachments/assets/19434e71-11ee-430b-a6a5-04715a16de4d" />
 
-<img width="1349" height="909" alt="image" src="https://github.com/user-attachments/assets/af80bf81-a819-4b35-8470-9c4ac09f424b" />
+<img width="899" height="606" alt="image" src="https://github.com/user-attachments/assets/af80bf81-a819-4b35-8470-9c4ac09f424b" />
 
 Kao što možemo da vidimo sa slike, kao transiver je korišćen SN75HVD12, pri čemu se pinovi DE (*Driver Enable*) i RE (*Receiver Enable*) mogu kratko spojiti korišćenjem džampera DE/RE (donja pozicija), pri čemu se onda stanje transivera (slanje/prijem) kontroliše pinom BCM22 (*wiringPi* 3) *Raspberry Pi* platforme. Alternativno, ako pinovi nisu kratko spojeni džamperom (gornja pozicija), pinovi DE i RE mogu nezavisno kontrolisati pinovima BCM27 (*wiringPi* 2) i BCM22, respektivno. *Pull-up*, *pull-down* i otpornik za terminaciju koji se koriste na magistrali, takođe mogu da se uključe ili isključe pomoću dostupnih džampera.
 
 Izgled i električna šema druge ploče dati su na slikama ispod.
 
-<img width="960" height="468" alt="image" src="https://github.com/user-attachments/assets/9615afc9-d47f-41eb-8cc3-0c5006d67fd8" />
+<img width="480" height="234" alt="image" src="https://github.com/user-attachments/assets/9615afc9-d47f-41eb-8cc3-0c5006d67fd8" />
 
-<img width="1442" height="895" alt="image" src="https://github.com/user-attachments/assets/a31dc98f-06a3-44be-a512-a540121aaac5" />
+<img width="961" height="597" alt="image" src="https://github.com/user-attachments/assets/a31dc98f-06a3-44be-a512-a540121aaac5" />
 
 Kod ove ploče kao transiver se koristi SP3485EN, koji takođe ima naponske nivoe kompatibilne sa *Raspberry Pi* platformom. Za razliku od prve ploče, DE i RE pinovi kod ove ploče su kratko spojeni i to se ne može promijeniti. Stanje transivera (slanje/prijem) kontrolišemo pinom BCM4 (*wiringPi* 7) *Raspberry Pi* platforme. Otpornik ya terminaciju magistrale možemo uključiti ili isključiti pomoću prekidača 120R označenog sa RS485.
 
