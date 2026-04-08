@@ -24,7 +24,7 @@ U okviru *Linux* operativnog sistema, ovom interfejsu se može pristupati preko 
 
 Status sistemske konzole na hardverskom UART modulu provjeravamo komandom:
 
-```
+```sh
 dmesg | grep tty
 ```
 
@@ -32,7 +32,7 @@ dmesg | grep tty
 
 Ova komanda prikazuje sve terminalne uređaje (`tty`) registrovane u operativnom sistemu (uključujući i hardverski UART interfejs), kao i njihovo stanje po pitanju sistemske konzole. Potrebno je potražiti liniju u kojoj piše da je konzola omogućena (*console enabled* na terminalnom uređaju `/dev/ttyAMA0`). Ako ove linije nema, to znači da konzola nije omogućena na ovom interfejsu i nije potrebno modifikovati konfiguraciju. Ako linija postoji, potrebno je onemogućiti konzolu u okviru sistemskih podešavanja kojima se pristupa komandom:
 
-```
+```sh
 sudo raspi-config
 ```
 
@@ -40,14 +40,14 @@ Komanda pokreće konfiguracioni program sa ponuđenim različitim opcijama. U na
 
 **Napomena:** Ukoliko se kao ciljna platforma koristi *Raspberry Pi 3*, neophodno je onemogućiti *bluetooth* modul koji se podrazumijevano povezuje na `/dev/ttyAMA0` serijski port. U tu svrhu, potrebno je dodati sljedeću liniju na kraj fajla `/boot/config.txt`:
 
-```
+```sh
 dtoverlay=pi3-disable-bt
 ```
 
 ## Podešavanje parametara serijskog porta ##
 U *Linux* operativnom sistemu, trenutna podešavanja serijskog porta u okviru konzole, mogu se prikazati komandom:
 
-```
+```sh
 stty -F /dev/ttyAMA0 -a
 ```
 
@@ -55,14 +55,14 @@ Opcija `-F` definiše naziv virtuelnog fajla serijskog porta čija podešavanja 
 
 Tako, na primjer, ako želimo da promijenimo bitsku brzinu u man stranici komande možemo da vidimo da je potrebno koristiti sljedeći format `stty` komande:
 
-```
+```sh
 stty -F /dev/ttyAMA0 N
 ```
 gdje je `N` broj koji definiše bitsku brzinu.
 
 Ostale opcije u okviru komande, uglavnom se odnose na uključenje i isključenje različitih opcija kojima podešavamo parametre terminala, UART interfejsa ili serijskog porta. Opcija se uključuje navođenjem njenog imena, a isključuje navođenjem imena opcije ispred kojeg se stavlja znak manje (`-`). Na primjer, ako želimo da uključimo slanje bita parnosti, a isključimo eho, koristimo sljedeću komandu
 
-```
+```sh
 stty -F /dev/ttyAMA0 parenb -echo
 ```
 
@@ -71,19 +71,19 @@ Kao što možemo da vidimo iz primjera prethodne komande, jednom komandom je mog
 ## Slanje i prijem podataka ##
 Kao što je već poznato, svi uređaji u *Linux* operativnom sistemu se vide kao fajlovi. Prema tome, da bi poslali podatke na serijski port iz konzole, potrebno je koristiti *Linux* operator za redirekciju (`>`), pri čemu se na standardni izlaz šalje podatak pomoću `echo` komande.
 
-```
+```sh
 echo "Baba Vanga" > /dev/ttyAMA0
 ```
 
 U komandi iznad, string `Baba Vanga` koji bi se `echo` komandom inače prikazivao na standardnom izlazu, preusmjerava se na virtuelni fajl `/dev/ttyAMA0`, koji efektivno šalje karaktere na serijski port, odnosno UART interfejs u konkretnom slučaju. Važno je napomenuti da se string koji sadrži razmake specificira unutar jednostrukih ili dvostrukih navodnika. Komadna `echo` može da primi i dodatne opcije, kao na prijmer, `-n` kojom se iz datog stringa izostavlja sekvenca za novi red (*newline*), ili `-e` koja omogućava interpretaciju specijalnih znakova koji su označeni *backslash* karakterom (korisno kod slanja podataka u heksadecimalnoj notaciji). Na primjer, ako želimo da pošaljemo heksadecimalni broj 0x1234, koristimo sljedeću komandu:
 
-```
+```sh
 echo -n -e '\x12\x34' > /dev/ttyAMA0
 ```
 
 Čitanje podatka sa serijskog porta obavlja se na sličan način, čitanjem sadržaja fajla. To se, na primjer, može postići komandom `cat`:
 
-```
+```sh
 cat /dev/ttyAMA0
 ```
 
