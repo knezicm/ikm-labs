@@ -19,7 +19,7 @@ U *Linux* operativnom sistemu, za kontrolu rada serijskog porta koristi se *term
 
 Da bi mogli da pristupimo nekom fajlu, potrebno je prvo da ga otvorimo. U tu svrhu koristimo sistemski poziv `open()`. U primjeru serijskog porta, fajl se otvara na sljedeći način:
 
-```
+```c
 int fd;
 ...
 fd = open("/dev/ttyAMA0", O_RDWR | O_NOCTTY | O_NDELAY);
@@ -31,7 +31,7 @@ gdje `fd` predstavlja promjenljivu tipa `int` u kojoj se nalazi *file descriptor
 
 Podaci se šalju i primaju preko serijskog porta korišćenjem `write()` i `read()` sistemskih poziva. Obje funkcije zahtijevaju da im se proslijedi *file descriptor* otvorenog vrituelnog fajla serijskog porta, pokazivač na bafer u kojem se nalaze podaci koje treba poslati, odnosno u koji će se upisati primljeni podaci i broj bajtova. Funkcija vraća broj uspješno poslatih/primljenih bajtova, odnosno negativnu vrijednost ako se desi greška. Dio koda kojim se razmjenjuju podaci preko serijskog porta (softverska *loopback* veza) ima sljedeći izgled:
 
-```
+```c
 unsigned char  buffer = 's';
 ...
 while (1)
@@ -44,13 +44,13 @@ while (1)
 
 Po završetku rada sa serijskim portom, fajl je potrebno zatvoriti sistemskim pozivom `close()` kojoj se prosljeđuje *file descriptor* datog fajla:
 
-```
+```c
 close(fd)
 ```
 
 Važno je napomenuti da korišćenje prethodnih funkcija zahtjeva uključivanje određenih sistemskih *header* fajlova u kojima su definisani prototipi datih funkcija. S tim u vezi, u zaglavlju programa, treba da se nalaze sljedeće direktive:
 
-```
+```c
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -74,7 +74,7 @@ Sve prethodno bazira se na standardnim funkcijama i sistemskim pozivima *Linux* 
 
 Većina prethodno navedenih funkcija kao argument očekuje pokazivač na `termios` strukturu podataka, koja sadrži sljedeća polja:
 
-```
+```c
 tcflag_t c_iflag;   /* input modes */
 tcflag_t c_oflag;   /* output modes */
 tcflag_t c_cflag;   /* control modes */
@@ -88,7 +88,7 @@ Za više informacija o dostupnim funkcijama i opcijama, preporučuje se da stude
 
 Primjer podešavanja serijskog porta ima sljedeći izgled:
 
-```
+```c
 struct termios config;
 ...
 tcgetattr(fd, &config); // get current config
@@ -105,26 +105,28 @@ Parametar `VMIN` označava minimalan broj potrebnih karaktera u baferu da `read(
 
 Da bi mogli koristiti *termios API*, u zaglavlju fajla je neophodno dodati sljedeću direktivu:
 
-```
+```c
 #include <termios.h>
 ```
 
 ## Povezivanje RS-485 mreže ##
 RS-485 je poludupleksna *multipoint* mreža u formi magistrale na koju paralelno može da se poveže do 32 čvora sa jediničnim opterećenjem (*unit load*). Magistrala mora da bude terminisana na oba kraja otpornikom čija je otpornost jedaka karakterističnoj impendansi voda (120 oma u slučaju upredene parice), kako bi se izbjegla refleksija signala.
 
-Na fizičkom sloju RS-485 mreže, koriste se komponente pod nazivom transiveri, čija je uloga da digitalni signal koji dolazi sa UART interfejsa nekog mikrokontrolera prevede u diferencijalni signal u skladu sa specifikacijama starndarda. Najčešće korišćeni transiveri su MAX-485 za slučaj kada se koristi napajanje od 5V, odnosno SN75HVD12 ako je napajanje 3.3V. Iako je za *Raspberry Pi* pogodnija druga opcija, u ovoj vježbi je na raspolaganju modul koji kao transiver koristi MAX-485. Izgled samog modula je dat na slici ispod.
+Na fizičkom sloju RS-485 mreže, koriste se komponente pod nazivom transiveri (eng. *transceiver*), čija je uloga da digitalni signal koji dolazi sa UART interfejsa nekog mikrokontrolera prevede u diferencijalni signal u skladu sa specifikacijama starndarda. Najčešće korišćeni transiveri su MAX-485 za slučaj kada se koristi napajanje od 5V, odnosno SN75HVD12 ako je napajanje 3.3V. Za rad u ovoj vježbi na raspolaganju su dva tipa modula:
+- IKM HAT ploča specijalno projektovana za izvođenje nastave iz ovog predmeta i
+- RS485 CAN HAT ploča kompanije Waveshare (više informacija o ovoj ploči možete pronaći na [wiki stranici](https://www.waveshare.com/wiki/RS485_CAN_HAT) ploče)
 
-![RS-485 modul](./imgs/rs-485-module.png)
+Izgled prve ploče, kao i njena električna šema dati su na slikama ispod.
 
-Pin DI (*Driver Input*) predstavlja digitalni ulaz transivera koji se povezuje sa predajnom linijom UART interfejsa (TX). Pin RO (*Receiver Output*) je izlazni pin koji je potrebno dovesti na prijemnu liniju UART interfejsa (RX). Pinovi DE (*Driver Enable*) i RE (*Receiver Enable*) služe za omogućenje slanja i prijema podatka, respektivno. Iako su ovo dva nezavisna pina, u praksi se obično kratko spajaju tako da se transiver postavlja u režim predajnika dovođenjem visokog logičkog nivoa, odnosno u režim prijemnika kada se dovede nizak logički nivo na ova dva pina.
+Kao što možemo da vidimo sa slike, kao transiver je korišćen SN75HVD12, pri čemu se pinovi DE (*Driver Enable*) i RE (*Receiver Enable*) mogu kratko spojiti korišćenjem džampera DE/RE (donja pozicija), pri čemu se onda stanje transivera (slanje/prijem) kontroliše pinom BCM22 (*WiringPi* 3) *Raspberry Pi* platforme. Alternativno, ako pinovi nisu kratko spojeni džamperom (gornja pozicija), pinovi DE i RE mogu nezavisno kontrolisati pinovima BCM27 (*WiringPi* 2) i BCM22, respektivno. *Pull-up*, *pull-down* i otpornik za terminaciju koji se koriste na magistrali, takođe mogu da se uključe ili isključe pomoću dostupnih džampera.
 
-Električna šema datog modula, data je na sljedećoj slici (preuzeta sa sljedećeg [izvora](http://www.yourduino.com/sunshop/index.php?l=product_detail&p=323)).
+Izgled i električna šema druge ploče dati su na slikama ispod.
 
-![Šema RS-485 modula](./imgs/MAX485-Module-Sch1.jpg)
+<img width="960" height="468" alt="image" src="https://github.com/user-attachments/assets/9615afc9-d47f-41eb-8cc3-0c5006d67fd8" />
 
-S obzirom da ovaj modul koristi napajanje od 5V i da digitalni ulazi/izlazi koriste očekuju, odnosno daju 5V pri visokom logičkom nivou, direktno spajanje ovog modula sa pinovima na *Raspberry Pi* platformi nije dozvoljeno. Stoga je nephodno **obavezno** koristiti posebno kolo za prilagođavanje napona sa 5V na 3.3V (npr. [3.3V-5V Voltage Translator](https://www.mikroe.com/33v-5v-voltage-translator-board) kompanije Mikroelektronika) ili na neki drugi način zaštiti ulazne pinove *Rasberry Pi* platforme (npr. serijskim vezivanjem otpornika otpornosti koja je veća ili jednaka 2k).
+<img width="1442" height="895" alt="image" src="https://github.com/user-attachments/assets/a31dc98f-06a3-44be-a512-a540121aaac5" />
 
-**Napomena:** Kod daljinskog pristupa RS-485 mreži koja je realizovana za potrebe ove vježbe, koriste se specifično razvijene ploče koje se povezuju sa *Raspberry Pi* platformom, a koje na sebi sadrže, između ostalog, i RS-485 transiver koji radi na 3.3V (SN75HVD12). Prema tome, dodatni translator napona se ne koristi u ovom slučaju.
+Kod ove ploče kao transiver se koristi SP3485EN, koji takođe ima naponske nivoe kompatibilne sa *Raspberry Pi* platformom. Za razliku od prve ploče, DE i RE pinovi kod ove ploče su kratko spojeni i to se ne može promijeniti. Stanje transivera (slanje/prijem) kontrolišemo pinom BCM4 ((*WiringPi* 7)) *Raspberry Pi* platforme. Otpornik ya terminaciju magistrale možemo uključiti ili isključiti pomoću prekidača 120R označenog sa RS485.
 
 ## Zadaci za samostalnu izradu ##
 
