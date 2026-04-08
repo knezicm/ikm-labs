@@ -118,7 +118,7 @@ Na fizičkom sloju RS-485 mreže, koriste se komponente pod nazivom transiveri (
 
 Izgled prve ploče, kao i njena električna šema dati su na slikama ispod.
 
-Kao što možemo da vidimo sa slike, kao transiver je korišćen SN75HVD12, pri čemu se pinovi DE (*Driver Enable*) i RE (*Receiver Enable*) mogu kratko spojiti korišćenjem džampera DE/RE (donja pozicija), pri čemu se onda stanje transivera (slanje/prijem) kontroliše pinom BCM22 (*WiringPi* 3) *Raspberry Pi* platforme. Alternativno, ako pinovi nisu kratko spojeni džamperom (gornja pozicija), pinovi DE i RE mogu nezavisno kontrolisati pinovima BCM27 (*WiringPi* 2) i BCM22, respektivno. *Pull-up*, *pull-down* i otpornik za terminaciju koji se koriste na magistrali, takođe mogu da se uključe ili isključe pomoću dostupnih džampera.
+Kao što možemo da vidimo sa slike, kao transiver je korišćen SN75HVD12, pri čemu se pinovi DE (*Driver Enable*) i RE (*Receiver Enable*) mogu kratko spojiti korišćenjem džampera DE/RE (donja pozicija), pri čemu se onda stanje transivera (slanje/prijem) kontroliše pinom BCM22 (*wiringPi* 3) *Raspberry Pi* platforme. Alternativno, ako pinovi nisu kratko spojeni džamperom (gornja pozicija), pinovi DE i RE mogu nezavisno kontrolisati pinovima BCM27 (*wiringPi* 2) i BCM22, respektivno. *Pull-up*, *pull-down* i otpornik za terminaciju koji se koriste na magistrali, takođe mogu da se uključe ili isključe pomoću dostupnih džampera.
 
 Izgled i električna šema druge ploče dati su na slikama ispod.
 
@@ -126,7 +126,7 @@ Izgled i električna šema druge ploče dati su na slikama ispod.
 
 <img width="1442" height="895" alt="image" src="https://github.com/user-attachments/assets/a31dc98f-06a3-44be-a512-a540121aaac5" />
 
-Kod ove ploče kao transiver se koristi SP3485EN, koji takođe ima naponske nivoe kompatibilne sa *Raspberry Pi* platformom. Za razliku od prve ploče, DE i RE pinovi kod ove ploče su kratko spojeni i to se ne može promijeniti. Stanje transivera (slanje/prijem) kontrolišemo pinom BCM4 ((*WiringPi* 7)) *Raspberry Pi* platforme. Otpornik ya terminaciju magistrale možemo uključiti ili isključiti pomoću prekidača 120R označenog sa RS485.
+Kod ove ploče kao transiver se koristi SP3485EN, koji takođe ima naponske nivoe kompatibilne sa *Raspberry Pi* platformom. Za razliku od prve ploče, DE i RE pinovi kod ove ploče su kratko spojeni i to se ne može promijeniti. Stanje transivera (slanje/prijem) kontrolišemo pinom BCM4 (*wiringPi* 7) *Raspberry Pi* platforme. Otpornik ya terminaciju magistrale možemo uključiti ili isključiti pomoću prekidača 120R označenog sa RS485.
 
 ## Zadaci za samostalnu izradu ##
 
@@ -152,9 +152,7 @@ U zadatku je potrebno uraditi sljedeće:
 
 U zadatku je potrebno uraditi sljedeće:
 
-1. Povezati dvije *Raspberry Pi* platforme sa datim RS-485 modulima. Predajnu UART liniju (TX) treba povezati sa DI linijom modula, dok prijemnu UART liniju (RX) treba povezati sa RO linijom modula. Liniju za omogućenje predajnika (žica označena sa TE) treba povezati sa pinom BCM22 (WiringPi 3) na konektoru. Važno je napomenuti da linija za omogućenje prijemnika treba da bude kratko spojena sa RE linijom na protobordu.
-
-**Napomena:** Sve linije treba da se povežu preko *3.3V-5V Voltage Translator* modula. Posebnu pažnju obratiti na smjer pinova. Modulu za translaciju napona, potrebno je dovesti napon napajanja od 5V.
+1. Povezati dvije *Raspberry Pi* platforme korišćenjem dostupnih RS-485 modula.
 
 2. Dopuniti izvorne kodove programa `master.c` i `slave.c` iz foldera `lab3-2` u skladu sa uputstvima datim u komentarima, a zatim ih kroskompajlirati. Vodite računa da ovi programi zavise od *wiringPi* biblioteke. Jedan program prenijeti na jednu, a drugi na drugu platformu i pokrenuti njihovo izvršavanje.
 
@@ -165,6 +163,4 @@ U zadatku je potrebno uraditi sljedeće:
 4. Na osciloskopu uhvatiti jedan karakter RS-485 komunikacije na diferencijalnim linijama A i B, a zatim potvrditi ispravnost brzine prenosa, prenesenog podatka i pozicija start i stop bita.
 
 5. Analizom talasnog oblika, odrediti vrijednosti napona na diferencijalnim linijama pri slanju logičke nule i logičke jedinice. Takođe, odrediti naponske nivoe na ovim linijama u neaktivnom stanju. Kolike su vrijednosti diferencijalnog i *common-mode* napona za pomenuta tri slučaja?
-
-**Napomena:** U slučaju daljinskog pristupa platformama pri realizaciji vježbe, može se desiti da je teško podesiti odgovarajući nivo za trigerovanje na RS-485 linijama A i B. Iz navedenog razloga, tačke 4 i 5 ne moraju da budu realizovane ako se vježba ne radi u laboratoriji.
 
