@@ -19,7 +19,7 @@ SPI kontroleru iz korisničkog domena u *Linux*-u, pristupa se preko virtuelnog 
 
 Kao kod svih uređaja, pristup se omogućava otvaranjem fajla pomoću sistemskog poziva `open()`:
 
-```
+```c
 int fd;
 ...
 fd = open("/dev/spidev0.0", O_RDWR);
@@ -31,7 +31,7 @@ Razmjenu podataka preko SPI interfejsa moguće je postići standardnim `write()`
 
 Prenos podataka sa punim dupleksom, kao i konfiguracija komunikacionih parametara SPI interfejsa, postiže se preko `ioctl()` sistemskog poziva kojem se prosljeđuje `struct spi_ioc_transfer` struktura koja opisuje SPI transakciju. Ova struktura ima sljedeći izgled:
 
-```
+```c
 struct spi_ioc_transfer {
 	__u64	tx_buf;			// pokazivač na predajni bafer
 	__u64	rx_buf;			// pokazivač na prijemni bafer
@@ -48,7 +48,7 @@ struct spi_ioc_transfer {
 
 Funkciji `ioctl()` prosljeđuje se fajl deskriptor `fd`, komanda koja definiše parametar koji se podešava, odnosno incira razmjenu podataka i pokazivač na promjenljivu (ili niz) u kojem se nalazi dati parametar. U sljedećem segmentu koda, ilustrovan je primjer konfiguracije parametara SPI interfejsa:
 
-```
+```c
 int speed = 1000000;
 int mode = 2;
 int size = 8;
@@ -62,7 +62,7 @@ Dodatne informacije o parametrima koji se mogu podešavati, mogu se pronaći u [
 
 Kao što je već pomenuto, razmjena podataka u punom dupleksu se inicira pozivom `ioctl()` funkcije kojoj se prosljeđuje struktura `struct spi_ioc_transfer` za opis SPI transakcije:
 
-```
+```c
 struct spi_ioc_transfer spi;
 unsigned char buffer = 0x55;
 ...
@@ -80,13 +80,13 @@ Važno je napomenuti da makro `SPI_IOC_MESSAGE(N)` prihvata parametar `N` koji d
 
 Po završetku rada SPI uređajem, fajl je potrebno zatvoriti sistemskim pozivom `close()` kojem se prosljeđuje *file descriptor* datog fajla:
 
-```
+```c
 close(fd)
 ```
 
 Da bi koristili prethodno opisane funkcije, potrebno je uključiti odgovarajuće sistemske *header* fajlove u kojima su definisani njihovi prototipi. S tim u vezi, u zaglavlju programa, treba da se nalaze sljedeće direktive:
 
-```
+```c
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
@@ -99,7 +99,7 @@ Korisničke aplikacije u okviru *Linux* operativnog sistema mogu da pristupe I2C
 
 Razmjena podataka se može obaviti standardnim `read()`/`write()` pristupom, pri čemu se čitanje vrijednosti registra periferije tipično obavlja u dvije I2C transakcije (tj. ne koristi se kombinovani prenos sa ponovljenom start sekvencom). Kombinovana transakcija čitanja/upisa se postiže pomoću `ioctl()` funkcije kojoj se prosljeđuje `struct i2c_rdwr_ioctl_data` struktura kojima ima sljedeći izgled:
 
-```
+```c
 struct i2c_rdwr_ioctl_data {
 	struct i2c_msg *msgs;	// pokazivač na niz struktura i2c_msg
 	__u32 nmsgs;			// broj i2c_msg poruka
@@ -108,7 +108,7 @@ struct i2c_rdwr_ioctl_data {
 
 Struktura `i2c_msg` opisuje I2C poruke koje se razmjenjuju u okviru transakcije. Svaka poruka je opisana sljedećim poljima u okviru ove strukture:
 
-```
+```c
 struct i2c_msg {
 	__u16 addr;		// adresa slave uređaja
 	__u16 flags;	// razni flegovi koji definišu kako se odvija transakcija
@@ -121,7 +121,7 @@ Flegovi u okviru ove strukture, definišu određene parametre transakcije. Tako,
 
 Primjer čitanja vrijednosti registra čija je adresa 0x10 periferije sa I2C adresom 0x40 sa standardnim `read()`/`write()` pristupom ima sljedeći izgled:
 
-```
+```c
 int addr = 0x40;
 unsigned char reg = 0x10;
 unsigned char rx_buffer[2];
@@ -137,7 +137,7 @@ read(fd, rx_buffer, 1);
 
 Primjer čitanja vrijednosti registra čija je adresa 0x10 periferije sa I2C adresom 0x40 sa kombinovanom I2C transakcijom ima sljedeći izgled:
 
-```
+```c
 struct i2c_msg iomsgs[] = {
 	[0] = {
 		.addr = addr,	/* slave address */
@@ -161,10 +161,9 @@ struct i2c_rdwr_ioctl_data msgset = {
 ioctl(fd, I2C_RDWR, &msgset);
 ```
 
-
 Konačno, da bi koristili prethodno opisane funkcije, potrebno je uključiti odgovarajuće sistemske *header* fajlove u kojima su definisani njihovi prototipi:
 
-```
+```c
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
