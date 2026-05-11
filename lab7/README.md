@@ -25,7 +25,7 @@ git clone --depth=1 --branch v2023.03 https://github.com/linux-can/can-utils.git
 Prethodnu komandu treba izvršiti u okviru radnog direktorijuma laboratorijske vježbe (`lab7`).
 
 > [!NOTE]  
-> Datom komandom se klonira specifična grana repozitorijuma označena sa `v2023.03`, što je u našen slučaju bitno jer novije verzije *can-utils* alata koriste *CMake build* sistem za kroskompajliranje projekta.
+> Datom komandom se klonira specifična grana repozitorijuma označena sa `v2023.03`, što je u našem slučaju bitno jer novije verzije *can-utils* alata koriste *CMake build* sistem za kroskompajliranje projekta.
 
 Sljedeći korak je kroskompajliranje biblioteke. Kroskompajliranje ćemo obaviti na sličan način kao što smo to radili u slučaju *libmodbus* biblioteke, jer se i u ovom projektu koriste alati za automatizovano kompajliranje projekata. Prvo je potrebno napraviti folder (npr. folder `usr` u radnom direktorijumu laboratorijske vježbe) u kojem će se nalaziti prekompajliranja (binarna) verzija biblioteke sa kojom će se kasnije dinamički linkovati izvršni fajl aplikacije.
 
@@ -48,7 +48,11 @@ Kao rezultat, u okviru `usr` foldera dobijamo binarne fajlove alata koji su sast
 Kopirati `cansend` i `candump` iz foldera `usr` na ciljnu platformu.
 
 ## Omogućenje i konfigurisanje CAN drajvera (radi se na ciljnoj platformi) ##
-Da bi mogao da se koristi CAN interefejs na *Raspberry Pi* platformi, neophodno je obezbijediti odgovarajući hardverski modul koji je povezan na jedan od interfejsa koje ova platforma nudi. U našem slučaju, koristićemo modul [*CAN SPI click*](https://www.mikroe.com/can-spi-5v-click) proizvođača Mikroelektronika. Ovaj modul sadrži CAN kontroler MCP2515 i CAN transiver MCP2551, koji omogućavaju povezivanje mikrokontrolera (ili mikroprocesora) sa CAN mrežom preko interfejsa. Alternativno, za rad sa CAN mrežom, koristićemo i dodatnu pločicu za *Raspberry Pi* namjenski razvijenu za potrebe ovog kursa.
+*Raspberry Pi* platforma nema ugrađen CAN kontroler, pa je neophodno obezbijediti vanjski CAN kontroler koji se sa ovom platformom povezuje preko SPI interfejsa. U našem slučaju u tu svrhu koristimo MCP2515 CAN kontroler, a na raspolaganju su dvije opcije: 
+- IKM HAT ploča specijalno projektovana za izvođenje nastave iz ovog predmeta i
+- RS485 CAN HAT ploča kompanije Waveshare (više informacija o ovoj ploči možete pronaći na [wiki stranici](https://www.waveshare.com/wiki/RS485_CAN_HAT) ploče)
+
+Ove ploče smo već ranije pominjali i koristili prilikom rada sa RS-485 interfejsom u prethodnim vježbama, tako da se ranije obezbjeđene električne šeme mogu iskoristiti i za ovu vježbu. Obje ploče koriste komponentu SN65HVD230 kao CAN transiver za transliranje signala prijemne (RX) i predajne (TX) linije CAN kontrolera na signale CAN magistrale (CAN_H i CAN_L). Pomenute ploče se razlikuju u izboru SPI interfejsa i njegovog selekcionog signala, što će biti bitno prilikom konfiguracije *Raspberry Pi* platforme koja je opisana u nastavku teksta vježbe.
 
 Za MCP2515 CAN kontroler već postoji podrška u *Linux* operativnom sistemu u vidu drajverskog modula. Da bi se ovaj modul učitao prilikom podizanja sistema na *Raspberry Pi* platformi, potrebno je promijeniti strukturu hardvera sistema definisanjem odgovarajućih parametara u okviru `/boot/config.txt` fajla. U tom smislu, ovaj fajl treba editovati komandom
 
@@ -56,7 +60,7 @@ Za MCP2515 CAN kontroler već postoji podrška u *Linux* operativnom sistemu u v
 sudo nano /boot/config.txt
 ```
 
-i unijeti sljedeće linije
+i, ukoliko koristite IKM HAT ploču, unijeti sljedeće linije
 
 ```
 dtparam=spi=on
@@ -75,7 +79,25 @@ dtoverlay=spi-bcm2835-overlay
 
 za starije verzije *Linux* kernela.
 
-**Napomena:** Informaciju o trenutnoj verziji *Linux* kernela možete dobiti komandom `uname -r`.
+> [!TIP]
+> Informaciju o trenutnoj verziji *Linux* kernela možete dobiti komandom `uname -r`.
+
+> [!IMPORTANT]  
+> Da bi drajver mogao ispravno da se inicijalizuje, obavezno morate da kopirate fajl `mcp2515-can2.dtbo`, koji se nalazi u folderu ove vježbe, u folder `/boot/overlays/` na *Raspberry Pi* platformi.
+
+Ukoliko koristite RS485 CAN HAT ploču, onda prethodno opisana konfiguracija treba da bude prilagođena na sljedeći način:
+
+```
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=12000000,interrupt=25,spimaxfrequency=2000000
+```
+
+> [!NOTE]  
+> Provjerite frekvenciju na kristalu kvarca RS485 CAN HAT ploču pošto postoje dvije varijante izrade. Ukoliko umjesto 12.000 piše 8.000, onda je potrebno prilagoditi konfiguraciju na sljedeći način:
+> ```
+> dtparam=spi=on
+> dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25,spimaxfrequency=1000000
+> ```
 
 Kada su napravljene opisane izmjene, platformu treba restartovati komandom `sudo reboot`, a nakon što je platforma ponovo pokrenuta, provjeriti da li je MCP2515 CAN kontroler uspješno inicijalizovan. U tu svrhu, može se koristiti komanda
 
@@ -86,7 +108,8 @@ dmesg | grep can
 
 pri čemu je u drugoj liniji prikazan tipičan ispis nakon izvršavanja komande (kada je incijalizacija uspješna). Ako se prijavi neka greška, potrebno je provjeriti da li je *CAN SPI click* modul, odnosno namjenska dodatna pločica, ispravno povezan sa SPI interfejsom *Raspberry Pi* platforme.
 
-**Napomena:** Prethodne komande podešavaju komunikaciju sa CAN kontrolerom preko SPI1 kanala platforme, pri čemu se kao SS signal koristi CE2 pin, dok je ulaz za prekid povezan na pin BCM 25 platforme (definisano parametrom `interrupt`).
+> [!NOTE]
+> Kao što možemo da vidimo iz prethodnih konfiguracija, IKM HAT ploča koristi SPI2 interfejs i CE2 selekcioni signal za povezivanje sa CAN kontrolerom. S druge strane, RS485 CAN HAT ploča koristi SPI0 interfejs i CE0 selekcioni signal za povezivanje sa CAN kontrolerom. Obje ploče za signal prekida koriste pin BCM25 *Raspberry Pi* platforme.
 
 Nakon što je prethodnom provjerom potvrđeno da je CAN kontroler uspješno inicijalizovan, sljedeći korak podrazumijeva aktiviranje CAN interefejsa. Ovo se postiže istim komandama kao kada se radi sa klasičnim mrežnim interfejsima.
 
@@ -96,7 +119,8 @@ ip link show dev can0                               # print info
 sudo ip link set can0 down                          # disable interface
 ```
 
-**Napomena:** Važno je definisati tip interfejsa (`type can` segment komande), te podesiti bitsku brzinu CAN mreže (parametar `bitrate`).
+> [!IMPORTANT]
+> Važno je definisati tip interfejsa (`type can` segment komande), te podesiti bitsku brzinu CAN mreže (parametar `bitrate`).
 
 Status interfejsa se dodatno može potvrditi komandom
 
@@ -117,7 +141,8 @@ candump can0 (pokreće se u drugom terminalu)
 
 Komanda `cansend` očekuje najmanje tri parametra. Prvi parametar označava CAN mrežni interfejs sa kojim komuniciramo. U našem slučaju, to je `can0`. Drugi parametar (127) predstavlja identifikator CAN okvira u kojem šaljemo podatke. Ovaj parametar mora da sadrži tri heksadecimalne cifre ako se radi o 11-bitnom identifikatoru, odnosno 8 heksadecimalnih cifara ako se radi o 29-bitnom identifikatoru (manje vrijednosti se dopunjavaju vodećim nulama). Treći parametar, koji je od drugog odvojen znakom `#`, predstavlja podatke u heksadecimalnoj notaciji (maksimalno 8 bajtova). Konačno, ako želite da pošaljete *Remote Request* okvir, poslije `#`, a prije podataka, potrebno je staviti `R`, npr. `cansend can0 127#R`.
 
-**Napomena:** Preporučuje se da se student upozna sa opcijama koje nudi komanda `cansend`. Alternativno, može se koristiti i komanda `cangen` iz prethodne vježbe. Posebno treba napomenuti da se komanda `candump` pokreće iz drugog terminala.
+> [!NOTE]
+> Preporučuje se da se student upozna sa opcijama koje nudi komanda `cansend`. Alternativno, može se koristiti i komanda `cangen` iz prethodne vježbe. Posebno treba napomenuti da se komanda `candump` pokreće iz drugog terminala.
 
 ## *BSD Sockets* aplikacioni interfejs ##
 
@@ -266,7 +291,8 @@ Ova opscija se tipično koristi kod čvorova koji samo šalju CAN okvire, da bi 
 Za detaljnije opcije vezane za filtriranje CAN poruka, studenti se upućuju na zvaničnu *SocketCAN* dokumentaciju.
 
 ## Zadaci za samostalnu izradu ##
-**Važne napomene:** Izmjene koje je potrebno napraviti u datom izvornom kodu, označene su sa `TODO` u okviru linija sa komentarima.
+> [!IMPORTANT]
+> Izmjene koje je potrebno napraviti u datom izvornom kodu, označene su sa `TODO` u okviru linija sa komentarima.
 
 ### Zadatak 1: Eksperimentisanje sa *can-utils* alatima ###
 U zadatku je potrebno uraditi sljedeće:
