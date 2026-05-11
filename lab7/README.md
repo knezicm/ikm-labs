@@ -19,10 +19,13 @@ Prije početka vježbe, student treba da ažurira stanje lokalnog repozitorijuma
 Prvi korak je kloniranje izvornog koda projekta sa repozitorijuma. U tu svrhu, koristimo sljedeću komandu:
 
 ```sh
-git clone --depth=1 https://github.com/linux-can/can-utils.git
+git clone --depth=1 --branch v2023.03 https://github.com/linux-can/can-utils.git
 ```
 
 Prethodnu komandu treba izvršiti u okviru radnog direktorijuma laboratorijske vježbe (`lab7`).
+
+> [!NOTE]  
+> Datom komandom se klonira specifična grana repozitorijuma označena sa `v2023.03`, što je u našen slučaju bitno jer novije verzije *can-utils* alata koriste *CMake build* sistem za kroskompajliranje projekta.
 
 Sljedeći korak je kroskompajliranje biblioteke. Kroskompajliranje ćemo obaviti na sličan način kao što smo to radili u slučaju *libmodbus* biblioteke, jer se i u ovom projektu koriste alati za automatizovano kompajliranje projekata. Prvo je potrebno napraviti folder (npr. folder `usr` u radnom direktorijumu laboratorijske vježbe) u kojem će se nalaziti prekompajliranja (binarna) verzija biblioteke sa kojom će se kasnije dinamički linkovati izvršni fajl aplikacije.
 
